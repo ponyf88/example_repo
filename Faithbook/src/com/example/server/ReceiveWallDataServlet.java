@@ -80,7 +80,7 @@ public class ReceiveWallDataServlet extends HttpServlet {
 			//nessun post esistente
 			String postID = postingUser + '0';
 			
-			System.out.println("Ultimo post #" + postID);
+			System.out.println("Nuovo post #" + postID);
 			
 			newPost.setPostID(postID);
 		}
@@ -94,15 +94,15 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		Date date = new Date(ts.getTime());
 
 		// S is the millisecond
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:MM:ss:S");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:MM:ss");
 		
-		String timestamp = simpleDateFormat.format(ts);
+		String timestamp = simpleDateFormat.format(date);
 
-		System.out.println("Timestamp:" + simpleDateFormat.format(timestamp));
+		System.out.println("Timestamp:" + timestamp);
 
 		newPost.setTimeStamp(timestamp);
 		
-		
+		//da salvare con MemoryManager
 	}
 
 

@@ -892,6 +892,7 @@ public class Faithbook implements EntryPoint {
 		navPanel.setCellVerticalAlignment(txtbxPassword, HasVerticalAlignment.ALIGN_MIDDLE);
 		txtbxPassword.setSize("80px", "20px");
 		sendButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Send",ButtonType.DEFAULT);
+		sendButton.setStyleName("btn btn-link btn-xs");
 		sendButton.setText("Accedi");
 		sendButton.addClickHandler(new LoginHandler());
 		navPanel.add(sendButton);
@@ -903,7 +904,7 @@ public class Faithbook implements EntryPoint {
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 		//sendButton.addClickHandler(buttonHandler);
-		//Cookies.removeCookie("userCookie");
+		Cookies.removeCookie("userCookie");
 		//Cookies.setCookie("userCookie", null);
 
 
