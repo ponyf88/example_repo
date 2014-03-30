@@ -1,0 +1,682 @@
+body { 
+	color: black;
+	margin: 5px 10%;
+	font-size: small;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	text-align: center;
+	background-color: white;
+}
+
+a {	
+	color: darkblue;
+}
+
+a:visited {	
+	color: darkblue; 
+}
+
+.gwt-DialogBox {
+	border: 2px solid #AAAAAA;
+	background-color: white;
+}
+
+.gwt-DialogBox .Caption {
+	background-image: url(gray_gradient.gif);
+	background-repeat: repeat-x;
+	padding: 4px;
+	padding-bottom: 8px;
+	font-weight: bold;
+	cursor: default;
+}
+
+.gwt-MenuBar {
+	background-color: #C3D9FF;
+	cursor: default;
+}
+
+.gwt-MenuItem {
+	font-size: 80%;
+	margin: 1px;
+	cursor: default;
+}
+
+.gwt-MenuItem-selected {
+	background-color: #E8EEF7;
+}
+
+.gwt-Tree {
+	margin: 0px 0px null null;
+	padding-top: 25px;
+	text-align: center;
+}
+
+.gwt-Tree .gwt-TreeItem {
+	padding: 10px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-size: 100
+	cursor: default;
+}
+
+.gwt-Tree .gwt-TreeItem-selected {
+	color: white;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-weight: bold;
+	background-color:  #3276B1;
+}
+
+.gwt-StackPanel {
+	background-color: white;
+	border: 1px solid #AAAAAA;
+	width: 15em;
+}
+
+.gwt-StackPanel .gwt-StackPanelItem {
+	background-image: url(blue_gradient.gif);
+	background-repeat: repeat-x;
+	background-color: #EEEEEE;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.gwt-StackPanel .gwt-StackPanelItem-selected {
+}
+
+.gwt-TabPanel {
+	
+}
+
+.gwt-TabPanelBottom {
+	border-left: 1px solid #87b3ff;
+	border-right: 1px solid #87b3ff;
+	border-bottom: 1px solid #87b3ff;
+}
+
+.gwt-TabBar {
+	font-size: smaller;
+}
+
+.gwt-TabBar .gwt-TabBarFirst {
+	height: 100%;
+	border-bottom: 1px solid #87b3ff;
+	border-right: 1px solid #87b3ff;
+	padding-left: 3px;
+}
+
+.gwt-TabBar .gwt-TabBarRest {
+	border-bottom: 1px solid #87b3ff;
+	padding-right: 3px;
+}
+
+.gwt-TabBar .gwt-TabBarItem {
+	border-top: 1px solid #87b3ff;
+	border-bottom: 1px solid #87b3ff;
+	padding: 2px;
+	cursor: hand;
+	white-space: nowrap;
+	border-right: 1px solid #87b3ff;
+}
+
+.gwt-TabBar .gwt-TabBarItem-selected {
+	font-weight: bold;
+	background-color: #e8eef7;
+	border-top: 1px solid #87b3ff;
+	border-right: 1px solid #87b3ff;
+	border-bottom: 1px solid #e8eef7;
+	padding: 2px;
+	cursor: default;
+	white-space: nowrap;
+}
+
+.gwt-PushButton-up {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-PushButton-up-hovering {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-PushButton-down {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-PushButton-down-hovering {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-up {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-up-hovering {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-down {
+  background-color: #C3D9FF;
+  padding: 2px;
+  background-color: #E8F1FF;
+  border: 2px solid transparent;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-down-hovering {
+  background-color: #C3D9FF;
+  padding: 2px;
+  background-color: #E8F1FF;
+  border: 2px solid transparent;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-RichTextArea {
+	margin-top: opx;
+	border: 1px solid black;
+	background-color: white;
+}
+
+.gwt-RichTextToolbar {
+  background-color: #C3D9FF;
+  padding: 2px;
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-up {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-up-hovering {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-down {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-down-hovering {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-up {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-up-hovering {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-down {
+  margin-right: 2px;
+  background-color: #E8F1FF;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-down-hovering {
+  margin-right: 2px;
+  background-color: #E8F1FF;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-HorizontalSplitPanel {
+	border: 8px solid #C3D9FF;
+}
+
+.gwt-HorizontalSplitPanel .splitter {
+	background-color: #C3D9FF;
+	cursor: move;
+}
+
+.gwt-HorizontalSplitPanel .left {
+  background-color: #E8EEF7;
+}
+
+.gwt-VerticalSplitPanel {
+	border: 8px solid #C3D9FF;
+}
+
+.gwt-VerticalSplitPanel .splitter {
+	background-color: #C3D9FF;
+	height: 8px;
+	cursor: move;
+}
+
+.gwt-SuggestBoxPopup {
+	border: 2px solid #C3D9FF;
+}
+
+.gwt-SuggestBoxPopup .item {
+	padding: 2px;
+}
+
+.gwt-SuggestBoxPopup .item-selected {
+	background-color: #C3D9FF;
+	padding: 2px;
+}
+
+.gwt-DisclosurePanel {
+	margin-right: 10px;
+	padding: 0px;
+	border: 2px solid #3276B1;
+	font-size: 12px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	text-align: center;
+	background-color: white;  
+}
+
+.gwt-DisclosurePanel-header {
+	color: white;
+	margin: 0px;
+	font-size: 12px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	background-color: #3276B1;
+}
+.gwt-Label-StockWatcher {
+	font-size: 18px;
+	font-weight: bold;
+}
+.gwt-Button-Add {
+	color: White;
+	margin: 20px 0px 0px;
+	font-size: 14px;
+	background-color: #2062B8;
+}
+/* stock list header row */
+.watchListHeader {
+	color: white;
+	font-style: italic;
+	text-align: center;
+	background-color: #2062B8;
+}
+
+/* stock list flex table */
+.watchList {
+	margin-bottom: 6px;
+	padding: 2px;
+	border: 1px solid silver;
+}
+
+/* stock list Price and Change fields */
+.watchListNumericColumn {
+  text-align: right;
+  width:8em;
+}
+
+/* stock list Remove column */
+.watchListRemoveColumn {
+  text-align: center;
+}
+/* Add Stock panel */
+.addPanel {
+  margin: 10px 0px 15px 0px;
+}
+
+/* stock list, the Remove button */
+.gwt-Button-remove {
+  width: 50px;
+}
+
+/* Dynamic color changes for the Change field */
+.noChange {
+  color: black;
+}
+
+.positiveChange {
+  color: green;
+}
+
+.negativeChange {
+  color: red;
+}
+.gwt-FacebookLike {
+	color: white;
+	font-size: 16px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	background-color: #3276B1;
+}
+.gwt-FacebookTextBox {
+	padding: 0px;
+	border: 1px solid #3276B1;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: left;
+	background-color: #eceff6;  
+}
+
+/* ------------------------------------------
+CSS3 FACEBOOK-STYLE BUTTONS (Nicolas Gallagher)
+Licensed under Unlicense
+http://github.com/necolas/css3-facebook-buttons
+------------------------------------------ */
+
+
+/* ------------------------------------------------------------------------------------------------------------- BUTTON */
+
+.uibutton { 
+    position: relative; 
+    z-index: 1;
+    overflow: visible; 
+    display: inline-block; 
+    font: bold 11px/normal 'lucida grande', tahoma, verdana, arial, sans-serif; 
+    /* outline: none; */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f5f6f6', EndColorStr='#e4e4e3'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    /* IE hacks */
+    zoom: 1;
+	color: #333;
+	margin: 0px 10px 0px 0px;
+	padding: 0.3em 0.6em 0.375em;
+	border-top: 1px solid #999;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #888;
+	border-left: 1px solid #999;
+	text-align: center;
+	white-space: nowrap;
+	text-decoration: none;
+	background-color: #eee;
+	background-image: linear-gradient(#f5f6f6, #e4e4e3);
+	cursor: pointer; 
+    *display: inline; 
+}
+
+.uibutton:hover,
+.uibutton:focus,
+.uibutton:active {
+    border-color: #777 #777 #666;
+}
+
+.uibutton:active {
+    border-color: #aaa;
+    background: #ddd;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+/* overrides extra padding on button elements in Firefox */
+.uibutton::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+/* ............................................................................................................. Icons */
+
+.uibutton.icon:before {
+    content: "";
+    position: relative; 
+    top: 1px; 
+    float:left;
+    width: 10px; 
+    height: 12px; 
+    margin: 0 0.5em 0 0; 
+    background: url(fb-icons.png) 99px 99px no-repeat;
+}
+
+.uibutton.edit:before  { background-position: 0 0; }
+.uibutton.add:before  { background-position: -10px 0; }
+.uibutton.secure:before  { background-position: -20px 0; }
+.uibutton.prev:before  { background-position: -30px 0; }
+.uibutton.next:before  { float:right; margin: 0 -0.25em 0 0.5em; background-position: -40px 0; }
+
+/* ------------------------------------------------------------------------------------------------------------- BUTTON EXTENSIONS */
+
+/* ............................................................................................................. Large */
+
+.uibutton.large {
+    font-size:13px;
+}
+
+/* ............................................................................................................. Submit, etc */
+
+.uibutton.confirm {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#637bad', EndColorStr='#5872a7'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+	color: #fff;
+	border-top: #29447E;
+	border-right: #29447E;
+	border-bottom: #1A356E;
+	border-left: #29447E;
+	background-color: #5B74A8;
+	background-image: linear-gradient(#637bad, #5872a7);
+}
+
+.uibutton.confirm:active {
+    background: #4F6AA3;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+	border: #29447E;
+}
+
+/* ............................................................................................................. Special */
+
+.uibutton.special {
+    border-color: #3b6e22 #3b6e22 #2c5115;
+    color: #fff;
+    background-color: #69A74E;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#75ae5c), to(#67a54b));
+    background-image: -moz-linear-gradient(#75ae5c, #67a54b);
+    background-image: -o-linear-gradient(#75ae5c, #67a54b);
+    background-image: linear-gradient(#75ae5c, #67a54b);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#75ae5c', EndColorStr='#67a54b'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #98c286;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #98c286;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #98c286;
+}
+
+.uibutton.special:active {
+    border-color: #3B6E22;
+    background: #609946;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+
+/* ------------------------------------------------------------------------------------------------------------- BUTTON GROUPS */
+
+.uibutton-group {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* IE hacks */
+    zoom: 1; 
+    *display: inline; 
+}
+
+.uibutton + .uibutton,
+.uibutton + .uibutton-group,
+.uibutton-group + .uibutton,
+.uibutton-group + .uibutton-group {
+    margin-left: 3px;
+}
+
+.uibutton-group li {
+    float: left;
+    padding: 0;
+    margin: 0;
+}
+
+.uibutton-group .uibutton {
+    float: left;
+    margin-left: -1px; 
+}
+
+.uibutton-group .uibutton:hover,
+.uibutton-group .uibutton:focus,
+.uibutton-group .uibutton:active {
+    z-index:2;
+}
+
+.uibutton-group > .uibutton:first-child,
+.uibutton-group li:first-child .uibutton { 
+    margin-left: 0; 
+}
+
+/* ------------------------------------------------------------------------------------------------------------- BUTTON CONTAINER */
+/* For mixing buttons and button groups, e.g., in a navigation bar */
+
+.uibutton-toolbar {
+    padding: 6px;
+    border-top: 1px solid #ccc;
+    background: #f2f2f2;
+}
+
+.uibutton-toolbar .uibutton,
+.uibutton-toolbar .uibutton-group {
+    vertical-align: bottom;
+}
+.gwt-FacebookLike-smallfont {
+	color: white;
+	margin: 0px;
+	font-size: 11px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	background-color: #3276B1;
+}
+.gwt-FacebookTitle{
+	color: white;
+	margin: 0px;
+	padding-left: 5px;
+	padding-bottom: 5px;
+	font-size: 26px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	background-color: #3276B1;
+}
+.gwt-DisclosurePanel-inside {
+	margin-right: 10px;
+	padding: 0px;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+}
+.gwt-MenuPanelLeft {
+	border-top: 0px solid #3276B1;
+	border-right: 2px solid #3276B1;
+	border-bottom: 2px solid #3276B1;
+	border-left: 0px solid #3276B1;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	background-color: white;
+}
+.gwt-Carousel-Red{
+	background-color: green;
+	text-align: center;
+	padding-left: 30%;
+	padding-right: 30%;
+	width: 50%;
+}
+.TreeItemButton-Custom {
+    z-index: 1;
+    overflow: visible; 
+    font: bold 12px/normal 'lucida grande', tahoma, verdana, arial, sans-serif; 
+    /* outline: none; */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f5f6f6', EndColorStr='#e4e4e3'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    /* IE hacks */
+    zoom: 1;
+    color: white;
+	vertical-align: middle;
+	text-align: center;
+	white-space: nowrap;
+	text-decoration: none;
+	background-color: #eee;
+	background-image: linear-gradient(#3276B1, #e4e4e3);
+	/*cursor: pointer; */
+}
+.gwt-DisclosurePanel-inside-CustomFaithbook {
+	margin-right: 10px;
+	padding: 0px;
+	border: 0px solid #3276B1;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+	background-color: white;  
+}
+.gwt-MenuPanelRight {
+	border-top: 0px solid #3276B1;
+	border-right: 0px solid #3276B1; 
+	border-bottom: 2px solid #3276B1;
+	border-left: 2px solid #3276B1;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	background-color: white;
+}
+.gwt-FacebookLike-Inverted {
+	color: #3276B1;
+	font-size: 12px;
+	font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	background-color: white;
+}
+.gwt-FriendListTableFlex {
+    border-top: 0px solid #3276B1;
+    border-right: 0px solid #3276B1;
+    border-bottom: 2px solid #3276B1;
+    border-left: 0px solid #3276B1;
+}
+flexTableCentered {
+text-align: center;
+} 

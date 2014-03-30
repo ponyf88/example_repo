@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<display-name>ProvaGWT</display-name>
+	<!-- TODO: Add <servlet> tags for each servlet here. -->
+	<servlet>
+		<description></description>
+		<display-name>HealthChecker</display-name>
+		<servlet-name>HealthChecker</servlet-name>
+		<servlet-class>com.example.server.HealthChecker</servlet-class>
+	</servlet>
+
+	<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
+	<servlet-mapping>
+		<servlet-name>HealthChecker</servlet-name>
+		<url-pattern>/HealthChecker</url-pattern>
+		<url-pattern>/index.html</url-pattern>
+		<url-pattern>/main.html</url-pattern>
+		<url-pattern>/ok.html</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<description></description>
+		<display-name>ReceiveWallDataServlet</display-name>
+		<servlet-name>ReceiveWallDataServlet</servlet-name>
+		<servlet-class>com.example.server.ReceiveWallDataServlet</servlet-class>
+
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ReceiveWallDataServlet</servlet-name>
+		<url-pattern>/ReceiveWallDataServlet</url-pattern>
+		<url-pattern>/sendAPost.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<description></description>
+		<display-name>SubscribeServlet</display-name>
+		<servlet-name>SubscribeServlet</servlet-name>
+		<servlet-class>com.example.server.SubscribeServlet</servlet-class>
+
+	</servlet>
+	<servlet>
+		<description></description>
+		<display-name>ImageServlet</display-name>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>com.example.server.ImageServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description></description>
+		<display-name>SearchFriendServlet</display-name>
+		<servlet-name>SearchFriendServlet</servlet-name>
+		<servlet-class>com.example.server.SearchFriendServlet</servlet-class>
+
+	</servlet>
+	<servlet>
+		<description></description>
+		<display-name>VisitProfileServlet</display-name>
+		<servlet-name>VisitProfileServlet</servlet-name>
+		<servlet-class>com.example.server.VisitProfileServlet</servlet-class>
+
+	</servlet>
+	<servlet>
+		<description></description>
+		<display-name>HandleFriendsServlet</display-name>
+		<servlet-name>HandleFriendsServlet</servlet-name>
+		<servlet-class>com.example.server.HandleFriendsServlet</servlet-class>
+
+	</servlet>
+
+
+	<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
+
+
+	<servlet-mapping>
+		<servlet-name>SubscribeServlet</servlet-name>
+		<url-pattern>/SubscribeServlet</url-pattern>
+		<url-pattern>/subscribe.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>HandleFriendsServlet</servlet-name>
+		<url-pattern>/HandleFriendsServlet</url-pattern>
+		<url-pattern>/handlefriends.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>VisitProfileServlet</servlet-name>
+		<url-pattern>/VisitProfileServlet</url-pattern>
+		<url-pattern>/visitprofile.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SearchFriendServlet</servlet-name>
+		<url-pattern>/SearchFriendServlet</url-pattern>
+		<url-pattern>/subscribe.html</url-pattern>
+
+	</servlet-mapping>
+
+	<servlet-mapping>
+
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>/images</url-pattern>
+	</servlet-mapping>
+	<!-- TODO: Optionally add a <welcome-file-list> tag to display a welcome 
+		file. -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+
+</web-app>

@@ -1,0 +1,28 @@
+.alert-placeholder {
+	position: fixed;
+	display: inline-block;
+	white-space: nowrap;
+	z-index: 1040;
+}
+
+.placeholder-top,.placeholder-top-left,.placeholder-top-right {
+	top: 25px;
+	min-height: 50px;
+}
+
+.placeholder-bottom,.placeholder-bottom-left,.placeholder-bottom-right {
+	bottom: 0px;
+	min-height: 50px;
+}
+
+.placeholder-top,.placeholder-bottom {
+	
+}
+
+.placeholder-top-left,.placeholder-bottom-left {
+	left: 20px;
+}
+
+.placeholder-top-right,.placeholder-bottom-right {
+	right: 20px;
+}
