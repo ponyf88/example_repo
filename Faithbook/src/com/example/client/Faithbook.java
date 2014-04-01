@@ -344,32 +344,74 @@ public class Faithbook implements EntryPoint {
 
 		TextArea postTextArea = null;
 		String visitedUser = null;
+		VerticalPanel containerPanel = new VerticalPanel();
+		
+		
+		private void recoverWallDataRequest(String httpMethod, String url) {
+			RequestBuilder builder = null;
+			if(httpMethod.equals("GET"))
+				builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
 
+			int respStatus = 0;
+
+			try {
+				Request request = builder.sendRequest(null, new RequestCallback() {
+					public void onError(Request request, Throwable exception) {
+						// Couldn't connect to server (could be timeout, SOP violation, etc.)
+						//sendButton.setEnabled(false);
+						Window.alert("Errore Client!");
+						
+					}
+
+					public void onResponseReceived(Request request, Response response) {
+						if (200 == response.getStatusCode()) {
+							if(response.getText().startsWith("Errore"))
+								Window.alert("Errore:post non ritrovato!");
+							else{
+								Window.alert(response.getText());
+								
+								//Render del pannello
+								Carousel car = new Carousel();
+								car.addItem("<h4>Caption 1</h4>", Layouts.as(
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(300));
+								car.addItem("<h4>Caption 2</h4> something about item2...", Layouts.as(
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item2", ButtonType.PRIMARY)).width().height(300));
+								car.addItem("<h4>Caption 3</h4> something about item3...", Layouts.as(
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item3", ButtonType.PRIMARY)).width().height(300));
+								car.addItem("<h4 >Caption 4</h4> something about item4...", Layouts.as(
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item4", ButtonType.PRIMARY)).width().height(300));
+								car.setWidth("100%");
+								//car.setStyleName("gwt-Carousel-Red");
+								containerPanel.add(car);
+								
+							}
+
+						} else {
+							// Handle the error.  Can get the status text from response.getStatusText()
+							Window.alert("Errore dal server:" + response.getStatusCode() +  response.getText());
+						}
+					}
+				});
+			} catch (RequestException e) {
+				// Couldn't connect to server
+				Window.alert("No connect!");
+			}
+
+		}
+		
 		public AboutPanel(String _visitedUser) {
-
+			
+			containerPanel.setSize("100%", "100%");
 			this.visitedUser = _visitedUser;
 
-			VerticalPanel containerPanel = new VerticalPanel();
-
-			containerPanel.setWidth("100%");
-			containerPanel.setHeight("100%");
-			Carousel car = new Carousel();
-			//setContentWidget(car);
 			//car.setStyleName("btn-success");
-			car.addItem("<h3>Caption 1</h3>", Layouts.as(
-					new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(300));
-			car.addItem("<h4>Caption 2</h4> something about item2...", Layouts.as(
-					new com.cleanform.gwt.bootstrap.client.ui.Button("Item2", ButtonType.PRIMARY)).width().height(300));
-			car.addItem("<h4>Caption 3</h4> something about item3...", Layouts.as(
-					new com.cleanform.gwt.bootstrap.client.ui.Button("Item3", ButtonType.PRIMARY)).width().height(300));
-			car.addItem("<h4 >Caption 4</h4> something about item4...", Layouts.as(
-					new com.cleanform.gwt.bootstrap.client.ui.Button("Item4", ButtonType.PRIMARY)).width().height(300));
-			car.setWidth("100%");
-			//car.setStyleName("gwt-Carousel-Red");
-			containerPanel.add(car);
+			//Recupero dati dei post
+			recoverWallDataRequest("GET","/ReceiveWallDataServlet?user=" + Cookies.getCookie("userCookie"));
+			
+
 			//Inserimento dati per l'owner del profilo
 			if(Cookies.getCookie("userCookie").equals(visitedUser)){
-
+				
 				//Scelta categoria
 				widget = new ListBox();
 				widget.addStyleName("demo-ListBox");
@@ -379,7 +421,7 @@ public class Faithbook implements EntryPoint {
 				widget.addItem("Eventi/Iniziative in parrocchia");
 				widget.addItem("Catechismo");
 				widget.addItem("Varie ed eventuali");
-
+				
 				//Coloriamo le categorie
 				NodeList<Node> children = widget.getElement().getChildNodes();       
 				for (int i = 0; i< children.getLength();i++) {
@@ -403,13 +445,14 @@ public class Faithbook implements EntryPoint {
 				}
 
 				containerPanel.add(widget);
+				widget.setWidth("100%");
 				//Inserimento dati
 				postTextArea = new TextArea();
 
 
 				containerPanel.add(postTextArea);
 				postTextArea.setHeight("100px");
-
+				postTextArea.setWidth("100%");
 				com.cleanform.gwt.bootstrap.client.ui.Button insButton = 
 						new com.cleanform.gwt.bootstrap.client.ui.Button("Inserisci", ButtonType.PRIMARY);
 				//TODO: formattare i dati nella textarea in JSON e inviarli con .toString()
@@ -418,11 +461,11 @@ public class Faithbook implements EntryPoint {
 				insButton.addClickHandler(new SendWallDataHandler());
 
 				containerPanel.add(insButton);
-
-
+				
+				add(containerPanel);
 			}
 
-			add(containerPanel);
+			
 
 		}
 
@@ -892,7 +935,7 @@ public class Faithbook implements EntryPoint {
 		navPanel.setCellVerticalAlignment(txtbxPassword, HasVerticalAlignment.ALIGN_MIDDLE);
 		txtbxPassword.setSize("80px", "20px");
 		sendButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Send",ButtonType.DEFAULT);
-		sendButton.setStyleName("btn btn-link btn-xs");
+		sendButton.setStyleName("btn btn-default btn-sm");
 		sendButton.setText("Accedi");
 		sendButton.addClickHandler(new LoginHandler());
 		navPanel.add(sendButton);
@@ -904,7 +947,7 @@ public class Faithbook implements EntryPoint {
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 		//sendButton.addClickHandler(buttonHandler);
-		Cookies.removeCookie("userCookie");
+		//Cookies.removeCookie("userCookie");
 		//Cookies.setCookie("userCookie", null);
 
 
@@ -985,10 +1028,10 @@ public class Faithbook implements EntryPoint {
 		//menuPanel.add(homeButton);
 		//menuPanel.add(newsButton);
 		//menuPanel.add(matButton);
-		menuPanel.addButton("Home", "home");
+		menuPanel.addButton("<b><font color = '#3276B1'>Home</font><b>", "home");
 
-		menuPanel.addButton("News", "news");
-		menuPanel.addButton("Materiale", "materiale");
+		menuPanel.addButton("<b><font color = '#3276B1'>Blog</font><b>", "blog");
+		menuPanel.addButton("<b><font color = '#3276B1'>Materiale</font><b>", "materiale");
 		menuPanel.addActionHandler(new MenuPanelHandler());
 		//layout.add(Layouts.as(menuPanel).addStyle(HelperStyles.THUMBNAIL));
 

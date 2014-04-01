@@ -55,16 +55,16 @@ public class ReceiveWallDataServlet extends HttpServlet {
 
 			e.printStackTrace();
 		}
-		
+
 		resp.getWriter().println("Post Caricato");
-		
+
 	}
 	//Salvataggio del post
 	private void saveWallPost(String postingUser, int postType,
 			String postContent) {
-        
+
 		System.out.println("Salvando un post di " + postingUser);
-		
+
 		UserWallData newPost = new UserWallData();
 
 		newPost.setUsername(postingUser);
@@ -74,14 +74,14 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		newPost.setPostContent(postContent);
 
 		UserWallData lastPost = MemoryManager.getLastPostOf(postingUser);
-		
-		
+
+
 		if(MemoryManager.getLastPostOf(postingUser) == null){
 			//nessun post esistente
 			String postID = postingUser + '0';
-			
-			System.out.println("Nuovo post #" + postID);
-			
+
+			System.out.println("Nuovo post num" + postID);
+
 			newPost.setPostID(postID);
 		}
 		else{
@@ -95,73 +95,103 @@ public class ReceiveWallDataServlet extends HttpServlet {
 
 		// S is the millisecond
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:MM:ss");
-		
+
 		String timestamp = simpleDateFormat.format(date);
 
 		System.out.println("Timestamp:" + timestamp);
 
 		newPost.setTimeStamp(timestamp);
-		
+
 		//da salvare con MemoryManager
+		MemoryManager.createPost(newPost.getPostID());
+		MemoryManager.updatePost(newPost);
 	}
 
 
 
-public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) 
+			throws IOException {
 
-	UserProfileData newUser = null;
-	JSONArray userData = null;
-	int resultCounter = 0;
-	//your image servlet code here
-	if(req.getParameter("user")!=null){
+		UserProfileData newUser = null;
+		JSONArray userLastPosts = null;
+		int MAX_POST = 10;
+		//your image servlet code here
+		if(req.getParameter("user")!=null){
 
-		//Gestire Risultati multipli
-		String username = req.getParameter("user").toString();
-		//System.out.println(user);
-		newUser = MemoryManager.getUser(username);
-		userData = new JSONArray();
+			//Gestire Risultati multipli
+			String username = req.getParameter("user").toString();
+			System.out.println("Estraggo ultimi 10 post di: " + username);
+			newUser = MemoryManager.getUser(username);
+			userLastPosts = new JSONArray();
 
-		if(newUser!= null){
-			System.out.println("reperito dal datastore user: " + newUser.getUsername());
-			try {
+			if(newUser!= null){
 
-				JSONObject user = new JSONObject().put("user", newUser.getUsername());
+				UserWallData lastPost = MemoryManager.getLastPostOf(username);
+				if(lastPost != null){
+					try {
+						userLastPosts.put(0,createJSONPost(lastPost));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
-				JSONObject firstName = new JSONObject().put("firstName", newUser.getFirstName());
+					int postLastCounter = Integer.parseInt(lastPost.getPostID().replaceFirst(username, ""));
+					//Andiamo a prendere gli ultimi post dello user -- 10
+					int i = postLastCounter - 1;
+					while (i > 0 && ( (postLastCounter - i) < MAX_POST) ){
 
-				JSONObject secName = new JSONObject().put("secName", newUser.getSecondName());
+						UserWallData prevPost = MemoryManager.getPost(username + i);
 
-				JSONObject sex = new JSONObject().put("sex", newUser.getSex());
+						System.out.println("Estratto post con ID: " + prevPost.getPostID());
 
-				JSONObject birthDate = new JSONObject().put("birthDate", newUser.getBirthdate());
+						createJSONPost(prevPost);
+						try {
+							userLastPosts.put(i % MAX_POST,createJSONPost(lastPost));
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						i--;
+					}
 
-				JSONObject country = new JSONObject().put("country",newUser.getCountry());
 
-				JSONObject city = new JSONObject().put("city", newUser.getCity());
-
-				JSONObject address = new JSONObject().put("address", newUser.getAddress());
-
-				JSONObject job = new JSONObject().put("job", newUser.getJob());
-
-				userData.put(0, user);
-				userData.put(1, firstName);
-				userData.put(2, secName);
-				userData.put(3, sex);
-				userData.put(4, birthDate);
-				userData.put(5, country);
-				userData.put(6, city);
-				userData.put(7, address);
-				userData.put(8, job);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					resp.getWriter().println(userLastPosts.toString());
+				}
+				else
+					resp.getWriter().println("Errore nel trovare l'ultimo post!");
 			}
-
-			resp.getWriter().println(userData);
+			else
+				resp.getWriter().println("Errore nello user!");
 		}
-		else
-			resp.getWriter().println("Errore nel caricamento del profilo!");
 	}
-}
+
+	private JSONArray createJSONPost(UserWallData prevPost) {
+		JSONArray post = null;
+
+		try {
+			JSONObject user = new JSONObject().put("postingUser", prevPost.getUsername());
+
+			JSONObject postType = new JSONObject().put("postType", prevPost.getPostType());
+
+			JSONObject postContent = new JSONObject().put("postContent", prevPost.getPostContent());
+
+			JSONObject timestamp = new JSONObject().put("timestamp", prevPost.getTimeStamp());
+
+			post = new JSONArray(); 
+
+			post.put(0, user);
+			post.put(1, postType);
+			post.put(2, postContent);
+			post.put(3, timestamp);
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Errore nella creazione del Post con ID: " + prevPost.getPostID());
+		}
+		return post;
+
+
+	}
+
+
 }
