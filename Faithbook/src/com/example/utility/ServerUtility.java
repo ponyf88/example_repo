@@ -10,7 +10,20 @@ import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.example.data.UserProfileData;
+
 public class ServerUtility {
+	public String formatName(UserProfileData userData) {
+		
+		String firstName = userData.getFirstName();
+		String secondName = userData.getSecondName();
+		
+		firstName = firstName.replaceFirst(""+userData.getFirstName().charAt(0), ""+userData.getFirstName().toUpperCase().charAt(0));
+		secondName = secondName.replaceFirst(""+userData.getSecondName().charAt(0), ""+userData.getSecondName().toUpperCase().charAt(0));
+		
+		return firstName + " " + secondName;
+	}
+	
 	//Legge i dati in arrivo lato client come una sola stringa da conv. poi in JSON
 	public String getRequestText(HttpServletRequest req)
 		throws UnsupportedEncodingException, IOException {

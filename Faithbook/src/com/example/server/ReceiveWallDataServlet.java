@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -74,8 +75,8 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		newPost.setPostContent(postContent);
 
 		UserWallData lastPost = MemoryManager.getLastPostOf(postingUser);
-
-
+		
+		int lastPostIndex = Integer.parseInt(lastPost.getPostID().replaceFirst(postingUser, ""));
 		if(MemoryManager.getLastPostOf(postingUser) == null){
 			//nessun post esistente
 			String postID = postingUser + '0';
@@ -85,17 +86,20 @@ public class ReceiveWallDataServlet extends HttpServlet {
 			newPost.setPostID(postID);
 		}
 		else{
-			int newID = Integer.parseInt(lastPost.getPostID().replaceFirst(postingUser, "")) + 1;
+			int newID = lastPostIndex + 1;
 
 			newPost.setPostID(postingUser + newID);
 		}
 
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
+	
 		Date date = new Date(ts.getTime());
 
 		// S is the millisecond
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:MM:ss");
-
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm:ss");
+		
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
+		
 		String timestamp = simpleDateFormat.format(date);
 
 		System.out.println("Timestamp:" + timestamp);
@@ -114,7 +118,7 @@ public class ReceiveWallDataServlet extends HttpServlet {
 
 		UserProfileData newUser = null;
 		JSONArray userLastPosts = null;
-		int MAX_POST = 10;
+		final int MAX_POST = 10;
 		//your image servlet code here
 		if(req.getParameter("user")!=null){
 
@@ -127,9 +131,11 @@ public class ReceiveWallDataServlet extends HttpServlet {
 			if(newUser!= null){
 
 				UserWallData lastPost = MemoryManager.getLastPostOf(username);
+				
+				//Da traslare se si raggiunge il limite
 				if(lastPost != null){
 					try {
-						userLastPosts.put(0,createJSONPost(lastPost));
+						userLastPosts.put(0,createJSONPost(lastPost,newUser));
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -138,15 +144,18 @@ public class ReceiveWallDataServlet extends HttpServlet {
 					int postLastCounter = Integer.parseInt(lastPost.getPostID().replaceFirst(username, ""));
 					//Andiamo a prendere gli ultimi post dello user -- 10
 					int i = postLastCounter - 1;
+					int counterJSON = 1;
 					while (i > 0 && ( (postLastCounter - i) < MAX_POST) ){
-
+						
+						
 						UserWallData prevPost = MemoryManager.getPost(username + i);
 
 						System.out.println("Estratto post con ID: " + prevPost.getPostID());
 
-						createJSONPost(prevPost);
 						try {
-							userLastPosts.put(i % MAX_POST,createJSONPost(lastPost));
+							
+							userLastPosts.put(counterJSON,createJSONPost(prevPost,newUser));
+							counterJSON++;
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -165,11 +174,14 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		}
 	}
 
-	private JSONArray createJSONPost(UserWallData prevPost) {
+	private JSONArray createJSONPost(UserWallData prevPost, UserProfileData userData) {
 		JSONArray post = null;
 
 		try {
-			JSONObject user = new JSONObject().put("postingUser", prevPost.getUsername());
+			ServerUtility su = new ServerUtility(); 
+			String userFormattedName = su.formatName(userData);
+			
+			JSONObject user = new JSONObject().put("postingUser", userFormattedName);
 
 			JSONObject postType = new JSONObject().put("postType", prevPost.getPostType());
 
@@ -192,6 +204,7 @@ public class ReceiveWallDataServlet extends HttpServlet {
 
 
 	}
+
 
 
 }

@@ -339,14 +339,15 @@ public class Faithbook implements EntryPoint {
 	}	
 
 	//pannello About centrale
-	public class AboutPanel extends ScrollPanel {
+	public class AboutPanel extends VerticalPanel {
 		ListBox widget = null;
 
 		TextArea postTextArea = null;
 		String visitedUser = null;
-		VerticalPanel containerPanel = new VerticalPanel();
-		
-		
+		VerticalPanel carContainer = new VerticalPanel();
+		ScrollPanel commentContainerPanel = new ScrollPanel();
+		VerticalPanel insertPostPanel = new VerticalPanel();
+
 		private void recoverWallDataRequest(String httpMethod, String url) {
 			RequestBuilder builder = null;
 			if(httpMethod.equals("GET"))
@@ -360,7 +361,7 @@ public class Faithbook implements EntryPoint {
 						// Couldn't connect to server (could be timeout, SOP violation, etc.)
 						//sendButton.setEnabled(false);
 						Window.alert("Errore Client!");
-						
+
 					}
 
 					public void onResponseReceived(Request request, Response response) {
@@ -369,21 +370,45 @@ public class Faithbook implements EntryPoint {
 								Window.alert("Errore:post non ritrovato!");
 							else{
 								Window.alert(response.getText());
-								
-								//Render del pannello
 								Carousel car = new Carousel();
-								car.addItem("<h4>Caption 1</h4>", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(300));
+
+								JSONArray foundPosts = (JSONArray) JSONParser.parseStrict(response.getText());
+								for(int i = 0; i < foundPosts.size(); i++){
+									
+									//Window.alert("Lung del JSONArray: " + foundPosts.size());
+									JSONArray post = (JSONArray) foundPosts.get(i);
+									
+									String postingUser = ((JSONObject)post.get(0)).get("postingUser").isString().stringValue();
+									double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
+									String postContent = ((JSONObject)post.get(2)).get("postContent").isString().stringValue();
+									String postTimestamp = ((JSONObject)post.get(3)).get("timestamp").isString().stringValue();
+									
+									//car.addItem("<h4>Caption 1</h4>", Layouts.as(
+											//new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(200));
+									car.addItem("<h5>" + postContent + "</h5>" + "<br/>" + postingUser + ", " + postTimestamp, Layouts.as(
+											new com.cleanform.gwt.bootstrap.client.ui.Button("", ButtonType.SUCCESS)).width().height(200));
+									
+								}
+
+								//Render del pannello
+
+								//car.addItem("<h4>Caption 1</h4>", Layouts.as(
+								//		new com.cleanform.gwt.bootstrap.client.ui.Button(postContent, ButtonType.SUCCESS)).width().height(200));
 								car.addItem("<h4>Caption 2</h4> something about item2...", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item2", ButtonType.PRIMARY)).width().height(300));
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item2", ButtonType.PRIMARY)).width().height(200));
 								car.addItem("<h4>Caption 3</h4> something about item3...", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item3", ButtonType.PRIMARY)).width().height(300));
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item3", ButtonType.PRIMARY)).width().height(200));
 								car.addItem("<h4 >Caption 4</h4> something about item4...", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item4", ButtonType.PRIMARY)).width().height(300));
+										new com.cleanform.gwt.bootstrap.client.ui.Button("Item4", ButtonType.PRIMARY)).width().height(200));
 								car.setWidth("100%");
+								//car.setHeight("10%");
 								//car.setStyleName("gwt-Carousel-Red");
-								containerPanel.add(car);
-								
+								carContainer.add(car);
+
+								//TODO: Inserire box commenti 
+
+
+
 							}
 
 						} else {
@@ -398,20 +423,33 @@ public class Faithbook implements EntryPoint {
 			}
 
 		}
-		
+
 		public AboutPanel(String _visitedUser) {
-			
-			containerPanel.setSize("100%", "100%");
+
+			this.setSize("100%", "100%");
+
+			add(carContainer);
+			add(commentContainerPanel);
+			add(insertPostPanel);
+
+			carContainer.setSize("100%", "10%");
+			commentContainerPanel.setSize("100%", "40%");
+			//insertPostPanel.getElement().setAttribute("align", "bottom");
+			//verticalPanel_1.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
+			//verticalPanel_2.setSize("100%", "119px");
+			this.setCellVerticalAlignment(insertPostPanel, HasVerticalAlignment.ALIGN_BOTTOM);
+
+			insertPostPanel.setSize("100%", "50%");
+
 			this.visitedUser = _visitedUser;
 
 			//car.setStyleName("btn-success");
 			//Recupero dati dei post
 			recoverWallDataRequest("GET","/ReceiveWallDataServlet?user=" + Cookies.getCookie("userCookie"));
-			
 
 			//Inserimento dati per l'owner del profilo
 			if(Cookies.getCookie("userCookie").equals(visitedUser)){
-				
+
 				//Scelta categoria
 				widget = new ListBox();
 				widget.addStyleName("demo-ListBox");
@@ -421,7 +459,7 @@ public class Faithbook implements EntryPoint {
 				widget.addItem("Eventi/Iniziative in parrocchia");
 				widget.addItem("Catechismo");
 				widget.addItem("Varie ed eventuali");
-				
+
 				//Coloriamo le categorie
 				NodeList<Node> children = widget.getElement().getChildNodes();       
 				for (int i = 0; i< children.getLength();i++) {
@@ -444,14 +482,27 @@ public class Faithbook implements EntryPoint {
 					}           
 				}
 
-				containerPanel.add(widget);
+				insertPostPanel.add(widget);
 				widget.setWidth("100%");
+
 				//Inserimento dati
 				postTextArea = new TextArea();
-
-
-				containerPanel.add(postTextArea);
-				postTextArea.setHeight("100px");
+				String toShow = "Inserisci qui il tuo commento...";
+				postTextArea.setText(toShow);
+				postTextArea.addClickHandler(new ClickHandler(){
+					String toShow = "Inserisci qui il tuo commento...";
+					@Override
+					public void onClick(ClickEvent event) {
+						if(((TextArea) event.getSource()).getText().equals(toShow)){
+						((TextArea) event.getSource()).setText("");
+						postTextArea.setHeight("150px");
+						}
+					}
+					
+				});
+				
+				insertPostPanel.add(postTextArea);
+				postTextArea.setHeight("40px");
 				postTextArea.setWidth("100%");
 				com.cleanform.gwt.bootstrap.client.ui.Button insButton = 
 						new com.cleanform.gwt.bootstrap.client.ui.Button("Inserisci", ButtonType.PRIMARY);
@@ -460,12 +511,15 @@ public class Faithbook implements EntryPoint {
 
 				insButton.addClickHandler(new SendWallDataHandler());
 
-				containerPanel.add(insButton);
+				insertPostPanel.add(insButton);
+
+				insertPostPanel.setCellHorizontalAlignment(insButton, HasHorizontalAlignment.ALIGN_CENTER);
 				
-				add(containerPanel);
+
+				//setCellVerticalAlignment(insertPostPanel,HasVerticalAlignment.ALIGN_BOTTOM);
 			}
 
-			
+
 
 		}
 
@@ -488,8 +542,10 @@ public class Faithbook implements EntryPoint {
 						public void onResponseReceived(Request request,
 								Response response) {
 							if (200 == response.getStatusCode()) {
-								
+
 								Window.alert("post pubblicato con successo!");
+								
+								
 							} else {
 								Window.alert("errore nell'invio del post");
 							}
@@ -533,7 +589,7 @@ public class Faithbook implements EntryPoint {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		}
@@ -979,7 +1035,7 @@ public class Faithbook implements EntryPoint {
 				//Il cookie dovrebbe essere arrivato, controllare
 				public void onSubmitComplete(SubmitCompleteEvent event) {
 					centerVerticalPanel.removeFromParent();
-					
+
 					renderLoggedInWidgets();
 					loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
 				}
