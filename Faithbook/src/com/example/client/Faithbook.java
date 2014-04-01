@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -379,14 +380,28 @@ public class Faithbook implements EntryPoint {
 									JSONArray post = (JSONArray) foundPosts.get(i);
 									
 									String postingUser = ((JSONObject)post.get(0)).get("postingUser").isString().stringValue();
-									double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
+									Double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
 									String postContent = ((JSONObject)post.get(2)).get("postContent").isString().stringValue();
 									String postTimestamp = ((JSONObject)post.get(3)).get("timestamp").isString().stringValue();
-									
+									ButtonType postTypeBtn = null;
+									switch(postType.intValue()){
+										case 0:
+											postTypeBtn= ButtonType.PRIMARY;
+										break;
+										case 1:
+											postTypeBtn= ButtonType.SUCCESS;
+										break;
+										case 2:
+											postTypeBtn= ButtonType.WARNING;
+										break;
+										case 3:
+											postTypeBtn= ButtonType.DANGER;
+										break;
+									}
 									//car.addItem("<h4>Caption 1</h4>", Layouts.as(
 											//new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(200));
 									car.addItem("<h5>" + postContent + "</h5>" + "<br/>" + postingUser + ", " + postTimestamp, Layouts.as(
-											new com.cleanform.gwt.bootstrap.client.ui.Button("", ButtonType.SUCCESS)).width().height(200));
+											new com.cleanform.gwt.bootstrap.client.ui.Button("", postTypeBtn)).width().height(200));
 									
 								}
 
@@ -469,14 +484,22 @@ public class Faithbook implements EntryPoint {
 							OptionElement optionElement = (OptionElement) child;
 							optionElement.getStyle().setFontWeight(FontWeight.BOLD);
 
-							if (optionElement.getValue().equals("News personali"))
-								optionElement.getStyle().setColor("#3276B1");  
-							if (optionElement.getValue().equals("Eventi/Iniziative in parrocchia")) 
-								optionElement.getStyle().setColor("#47a447");
-							if (optionElement.getValue().equals("Catechismo")) 
-								optionElement.getStyle().setColor("#F0AD4E");
-							if (optionElement.getValue().equals("Varie ed eventuali")) 
-								optionElement.getStyle().setColor("#D9534F");
+							if (optionElement.getValue().equals("News personali")){
+								optionElement.getStyle().setBackgroundColor("#3276B1");  
+								optionElement.getStyle().setColor("white");  
+							}
+							if (optionElement.getValue().equals("Eventi/Iniziative in parrocchia")) {
+								optionElement.getStyle().setBackgroundColor("#47a447");
+								optionElement.getStyle().setColor("white");  	
+							}
+							if (optionElement.getValue().equals("Catechismo")){ 
+								optionElement.getStyle().setBackgroundColor("#F0AD4E");
+								optionElement.getStyle().setColor("white");  
+							}
+							if (optionElement.getValue().equals("Varie ed eventuali")) {
+								optionElement.getStyle().setBackgroundColor("#D9534F");
+								optionElement.getStyle().setColor("white");  
+							}
 
 						}
 					}           
@@ -544,7 +567,14 @@ public class Faithbook implements EntryPoint {
 							if (200 == response.getStatusCode()) {
 
 								Window.alert("post pubblicato con successo!");
-								
+								centerVerticalPanel.clear();
+								AboutPanel centerBasicData = null;
+
+								centerBasicData = new AboutPanel(visitedUser);
+
+								//Rimuovo il widget centrale (l'ultimo inserito)
+
+								centerVerticalPanel.add(centerBasicData);
 								
 							} else {
 								Window.alert("errore nell'invio del post");
@@ -1044,6 +1074,7 @@ public class Faithbook implements EntryPoint {
 			centerVerticalPanel.add(centerScrollable);
 			splitPanel.add(centerVerticalPanel);
 			RootLayoutPanel.get().add(splitPanel);
+			History.newItem("homepage");
 		}
 
 	}
@@ -1090,7 +1121,7 @@ public class Faithbook implements EntryPoint {
 		menuPanel.addButton("<b><font color = '#3276B1'>Materiale</font><b>", "materiale");
 		menuPanel.addActionHandler(new MenuPanelHandler());
 		//layout.add(Layouts.as(menuPanel).addStyle(HelperStyles.THUMBNAIL));
-
+		
 		splitPanel.addNorth(menuPanel, 37.0);
 
 	}
@@ -1104,8 +1135,10 @@ public class Faithbook implements EntryPoint {
 		public void onAction(ActionEvent event) {
 			// TODO Auto-generated method stub
 			String selectedItem = event.getAction();
-			if(selectedItem.equals("home"))
+			if(selectedItem	.equals("home")){
 				loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
+				
+			}
 			if(selectedItem.equals("materiale"))
 			{
 				//Rimozione pannelli centrali
