@@ -209,6 +209,24 @@ public class MemoryManager {
 		}
 	}
 	
+	//Estraggo user
+	public static synchronized UserWallData getPost(String postID) {
+
+		userCache = getMemcache("userCache");
+
+		ObjectDatastore datastore = new AnnotationObjectDatastore();
+
+		UserWallData aPost = (UserWallData) userCache.get(postID); 
+
+		if (aPost == null) {
+			aPost = datastore.load(UserWallData.class, postID);		
+		}
+
+		return aPost;
+	} 
+	
+	
+	//Prendo l'ultimo post di user dato in input
 	public static synchronized UserWallData getLastPostOf(String username) {
 
 		userCache = getMemcache("userCache");
@@ -230,12 +248,10 @@ public class MemoryManager {
 		if(userPostIds.size() > 0){
 		int lastPostCounter = Collections.max(userPostIds);
 		
-			
-		Iterator<UserWallData> lastPosts =  datastore.find().type(UserWallData.class).
-				addFilter("postId",FilterOperator.EQUAL , username + lastPostCounter).now();
+		System.out.println("Estraggo ultimo post: " +  username + lastPostCounter);
 		
 		
-		return lastPosts.next();
+		return getPost(username + lastPostCounter);
 		}
 		else
 			return null; //nessun Post dello user con username
