@@ -7,6 +7,8 @@ import com.cleanform.gwt.bootstrap.js.client.ui.ButtonGroup;
 import com.cleanform.gwt.bootstrap.js.client.ui.Carousel;
 
 
+import com.cleanform.gwt.bootstrap.js.client.ui.Navigator;
+import com.cleanform.gwt.bootstrap.js.client.ui.Navigator.NavType;
 import com.cleanform.gwt.user.client.ActionEvent;
 import com.cleanform.gwt.user.client.ActionEvent.ActionHandler;
 import com.cleanform.gwt.user.client.ui.TabPanel;
@@ -25,6 +27,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
@@ -36,6 +40,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -82,7 +87,7 @@ public class Faithbook implements EntryPoint {
 	public com.cleanform.gwt.bootstrap.client.ui.Button sendButton = null;
 	public Button button_1 = null;
 	public String visitedUser = null;
-	public ButtonGroup menuPanel = null;
+	public Navigator menuPanel = null;
 
 	public SubscribePanel centerScrollable = null;
 
@@ -123,7 +128,7 @@ public class Faithbook implements EntryPoint {
 				//Controllare se avviene il refresh automatico 
 				//RootLayoutPanel.get().add(splitPanel);
 			}
-			if(item.getTitle().equals("About")){
+			if(item.getTitle().equals("Bacheca")){
 				//Passare i dati di base da elaborare al pannello	
 				//image.setUrl("/images?imageType=profile&user=" + Cookies.getCookie("userCookie"));
 				centerVerticalPanel.clear();
@@ -258,8 +263,8 @@ public class Faithbook implements EntryPoint {
 
 		TreeItem trtmNewItem_1 = new TreeItem();
 		trtmNewItem_1.setStyleName("TreeItemButton-Custom");
-		trtmNewItem_1.setText("About");
-		trtmNewItem_1.setTitle("About");
+		trtmNewItem_1.setText("Bacheca");
+		trtmNewItem_1.setTitle("Bacheca");
 		tree.addItem(trtmNewItem_1);
 		trtmNewItem_1.setSize("", "10%");
 		trtmNewItem_1.setState(true);
@@ -375,49 +380,36 @@ public class Faithbook implements EntryPoint {
 
 								JSONArray foundPosts = (JSONArray) JSONParser.parseStrict(response.getText());
 								for(int i = 0; i < foundPosts.size(); i++){
-									
+
 									//Window.alert("Lung del JSONArray: " + foundPosts.size());
 									JSONArray post = (JSONArray) foundPosts.get(i);
-									
+
 									String postingUser = ((JSONObject)post.get(0)).get("postingUser").isString().stringValue();
 									Double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
 									String postContent = ((JSONObject)post.get(2)).get("postContent").isString().stringValue();
 									String postTimestamp = ((JSONObject)post.get(3)).get("timestamp").isString().stringValue();
 									ButtonType postTypeBtn = null;
 									switch(postType.intValue()){
-										case 0:
-											postTypeBtn= ButtonType.PRIMARY;
+									case 0:
+										postTypeBtn= ButtonType.PRIMARY;
 										break;
-										case 1:
-											postTypeBtn= ButtonType.SUCCESS;
+									case 1:
+										postTypeBtn= ButtonType.SUCCESS;
 										break;
-										case 2:
-											postTypeBtn= ButtonType.WARNING;
+									case 2:
+										postTypeBtn= ButtonType.WARNING;
 										break;
-										case 3:
-											postTypeBtn= ButtonType.DANGER;
+									case 3:
+										postTypeBtn= ButtonType.DANGER;
 										break;
 									}
 									//car.addItem("<h4>Caption 1</h4>", Layouts.as(
-											//new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(200));
+									//new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(200));
 									car.addItem("<h5>" + postContent + "</h5>" + "<br/>" + postingUser + ", " + postTimestamp, Layouts.as(
 											new com.cleanform.gwt.bootstrap.client.ui.Button("", postTypeBtn)).width().height(200));
-									
+
 								}
 
-								//Render del pannello
-
-								//car.addItem("<h4>Caption 1</h4>", Layouts.as(
-								//		new com.cleanform.gwt.bootstrap.client.ui.Button(postContent, ButtonType.SUCCESS)).width().height(200));
-								car.addItem("<h4>Caption 2</h4> something about item2...", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item2", ButtonType.PRIMARY)).width().height(200));
-								car.addItem("<h4>Caption 3</h4> something about item3...", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item3", ButtonType.PRIMARY)).width().height(200));
-								car.addItem("<h4 >Caption 4</h4> something about item4...", Layouts.as(
-										new com.cleanform.gwt.bootstrap.client.ui.Button("Item4", ButtonType.PRIMARY)).width().height(200));
-								car.setWidth("100%");
-								//car.setHeight("10%");
-								//car.setStyleName("gwt-Carousel-Red");
 								carContainer.add(car);
 
 								//TODO: Inserire box commenti 
@@ -517,13 +509,13 @@ public class Faithbook implements EntryPoint {
 					@Override
 					public void onClick(ClickEvent event) {
 						if(((TextArea) event.getSource()).getText().equals(toShow)){
-						((TextArea) event.getSource()).setText("");
-						postTextArea.setHeight("150px");
+							((TextArea) event.getSource()).setText("");
+							postTextArea.setHeight("150px");
 						}
 					}
-					
+
 				});
-				
+
 				insertPostPanel.add(postTextArea);
 				postTextArea.setHeight("40px");
 				postTextArea.setWidth("100%");
@@ -537,7 +529,7 @@ public class Faithbook implements EntryPoint {
 				insertPostPanel.add(insButton);
 
 				insertPostPanel.setCellHorizontalAlignment(insButton, HasHorizontalAlignment.ALIGN_CENTER);
-				
+
 
 				//setCellVerticalAlignment(insertPostPanel,HasVerticalAlignment.ALIGN_BOTTOM);
 			}
@@ -575,7 +567,7 @@ public class Faithbook implements EntryPoint {
 								//Rimuovo il widget centrale (l'ultimo inserito)
 
 								centerVerticalPanel.add(centerBasicData);
-								
+
 							} else {
 								Window.alert("errore nell'invio del post");
 							}
@@ -969,26 +961,108 @@ public class Faithbook implements EntryPoint {
 	}	
 
 	public void onModuleLoad() {
-		//NB STA ROBA MEGLIO DICHIARARLA SOPRA, COME sendButton
-		final Label errorLabel = new Label();
-		final CwConstants constants = null;
+		//Via alla history
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String historyToken = event.getValue();
 
-		visitedUser = null;
+				// Parse the history token
+				try {
+					switch(historyToken){
+					
+					case "homepage":
+						loadInitTopPanels();
+						renderLoggedInWidgets();
+
+						loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
+
+						break;
+					case "subscribe":
+						loadInitTopPanels();
+						centerVerticalPanel = new VerticalPanel();
+						centerVerticalPanel.setWidth("100%");
+						centerVerticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+						centerScrollable = new SubscribePanel();
+
+						centerScrollable.form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+							//Il cookie dovrebbe essere arrivato, controllare
+							public void onSubmitComplete(SubmitCompleteEvent event) {
+								centerVerticalPanel.removeFromParent();
+
+								renderLoggedInWidgets();
+								loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
+								centerVerticalPanel.removeFromParent();//rimuovo pannello predef
+							}
+						});
+
+						centerVerticalPanel.add(centerScrollable);
+						splitPanel.add(centerVerticalPanel);
+						RootLayoutPanel.get().add(splitPanel);
+						break;
+					case "materiale":
+						
+						//Rimozione pannelli centrali
+						if(verticalPanel!=null)
+							verticalPanel.removeFromParent();
+						if(verticalPanel_1!=null)	
+							verticalPanel_1.removeFromParent();
+						if(centerVerticalPanel != null)
+							centerVerticalPanel.removeFromParent();
+						//Creo frame dropbox
+
+						Frame frame = new Frame("./dropbox-prova.html");
+
+						centerVerticalPanel.clear();
+						centerVerticalPanel.add(frame);
+						splitPanel.add(centerVerticalPanel);
+						centerVerticalPanel.setSize("100%", "100%");
+						frame.setSize("100%", "100%");
+						
+						break;
+
+					}  
+
+				} catch (IndexOutOfBoundsException e) {
+					//carico homepage
+					History.newItem("homepage");
+				}
+			}
+		});
+
+
+		//Cookies.getCookie("userCookie")!=null
+		if(Cookies.getCookie("userCookie")!=null){
+			//Window.alert("Ho un cookie: " + Cookies.getCookie("userCookie"));
+			//Questa parte va inserita all'evento di click nel menu (Profilo)
+			History.newItem("homepage");
+
+		}
+		else {
+			//Mostro schermata di subscribe (default)
+			History.newItem("subscribe");
+		}
+
+	}
+
+	public void loadInitTopPanels() {
+		
+		//Pulizia iniziale
+		RootLayoutPanel.get().clear();
+		splitPanel.clear();
 		//Cookies.removeCookie("userCookie");
 		navPanel = new HorizontalPanel();
 		navPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		navPanel.setStyleName("gwt-FacebookLike");
 
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
-
-
-		//splitPanel.ensureDebugId("cwSplitLayoutPanel");
-		//splitPanel.getElement().getStyle().setProperty("border", "3px solid #e7e7e7");
-
 		splitPanel.setSize("100%", "100%");
+		
+		
+		  
 		// Add text all around.
 		Label lblProba = new Label("faithbook");
+		
 		lblProba.setText("faithbook", Direction.LTR );
 		lblProba.setStyleName("gwt-FacebookTitle");
 		lblProba.setSize("150px", "60px");
@@ -1009,7 +1083,7 @@ public class Faithbook implements EntryPoint {
 		navPanel.add(txtbxUser);
 		navPanel.setCellVerticalAlignment(txtbxUser, HasVerticalAlignment.ALIGN_MIDDLE);
 		navPanel.setCellHorizontalAlignment(txtbxUser, HasHorizontalAlignment.ALIGN_RIGHT);
-		txtbxUser.setSize("80px", "20px");
+		txtbxUser.setSize("80px", "30px");
 
 		txtbxPassword = new PasswordTextBox();
 		txtbxPassword.setTextAlignment(TextBoxBase.ALIGN_LEFT);
@@ -1019,7 +1093,7 @@ public class Faithbook implements EntryPoint {
 		navPanel.add(txtbxPassword);
 		navPanel.setCellHorizontalAlignment(txtbxPassword, HasHorizontalAlignment.ALIGN_RIGHT);
 		navPanel.setCellVerticalAlignment(txtbxPassword, HasVerticalAlignment.ALIGN_MIDDLE);
-		txtbxPassword.setSize("80px", "20px");
+		txtbxPassword.setSize("80px", "30px");
 		sendButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Send",ButtonType.DEFAULT);
 		sendButton.setStyleName("btn btn-default btn-sm");
 		sendButton.setText("Accedi");
@@ -1027,56 +1101,12 @@ public class Faithbook implements EntryPoint {
 		navPanel.add(sendButton);
 		navPanel.setCellVerticalAlignment(sendButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		navPanel.setCellHorizontalAlignment(sendButton, HasHorizontalAlignment.ALIGN_RIGHT);
-		//sendButton.setStyleName("uibutton");
-		//sendButton.setSize("58px", "20px");
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
-		//sendButton.addClickHandler(buttonHandler);
-		//Cookies.removeCookie("userCookie");
-		//Cookies.setCookie("userCookie", null);
-
-
 
 		splitPanel.addNorth(navPanel, 100.0);
-
-		//Cookies.getCookie("userCookie")!=null
-		if(Cookies.getCookie("userCookie")!=null){
-			//Window.alert("Ho un cookie: " + Cookies.getCookie("userCookie"));
-			//Questa parte va inserita all'evento di click nel menu (Profilo)
-
-			renderLoggedInWidgets();
-
-			loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
-
-			//rootPanel.add(splitPanel);
-		}
-		else {
-			//Mostro schermata di subscribe (default)
-
-			centerVerticalPanel = new VerticalPanel();
-			centerVerticalPanel.setWidth("100%");
-			centerVerticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-			centerScrollable = new SubscribePanel();
-
-			centerScrollable.form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-
-				//Il cookie dovrebbe essere arrivato, controllare
-				public void onSubmitComplete(SubmitCompleteEvent event) {
-					centerVerticalPanel.removeFromParent();
-
-					renderLoggedInWidgets();
-					loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
-				}
-			});
-
-			centerVerticalPanel.add(centerScrollable);
-			splitPanel.add(centerVerticalPanel);
-			RootLayoutPanel.get().add(splitPanel);
-			History.newItem("homepage");
-		}
-
+		//Cookies.removeCookie("userCookie");
 	}
 
 	public void renderLoggedInWidgets() {
@@ -1103,25 +1133,23 @@ public class Faithbook implements EntryPoint {
 		navPanel.setCellVerticalAlignment(logoutButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		navPanel.setCellHorizontalAlignment(logoutButton, HasHorizontalAlignment.ALIGN_RIGHT);
 
+		StringBuilder sb = new StringBuilder();
+		  sb.append("<p><button class='btn btn-default'>Default</button> <button class='btn btn-primary'>Primary</button> "
+			        + "<button class='btn btn-success'>Success</button> <button class='btn btn-info'>Info</button> "
+			        + "<button class='btn btn-warning'>Warning</button> <button class='btn btn-danger'>Danger</button> "
+			        + "<button class='btn btn-link'>Link</button></p>");
+		//com.cleanform.gwt.bootstrap.client.ui.Button homeButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Home",ButtonType.PRIMARY);
+		//com.cleanform.gwt.bootstrap.client.ui.Button newsButton = new com.cleanform.gwt.bootstrap.client.ui.Button("News",ButtonType.PRIMARY);
+		//com.cleanform.gwt.bootstrap.client.ui.Button matButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Materiale",ButtonType.PRIMARY);
 
-		com.cleanform.gwt.bootstrap.client.ui.Button homeButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Home",ButtonType.PRIMARY);
-		com.cleanform.gwt.bootstrap.client.ui.Button newsButton = new com.cleanform.gwt.bootstrap.client.ui.Button("News",ButtonType.PRIMARY);
-		com.cleanform.gwt.bootstrap.client.ui.Button matButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Materiale",ButtonType.PRIMARY);
-
-		menuPanel = new ButtonGroup();
-		menuPanel.setStyleName("btn-justified");
-		//Meglio usare tabPanel per usare i bottoni...
-		//menuPanel = new TabPanel();
-		//menuPanel.add(homeButton);
-		//menuPanel.add(newsButton);
-		//menuPanel.add(matButton);
-		menuPanel.addButton("<b><font color = '#3276B1'>Home</font><b>", "home");
-
-		menuPanel.addButton("<b><font color = '#3276B1'>Blog</font><b>", "blog");
-		menuPanel.addButton("<b><font color = '#3276B1'>Materiale</font><b>", "materiale");
-		menuPanel.addActionHandler(new MenuPanelHandler());
-		//layout.add(Layouts.as(menuPanel).addStyle(HelperStyles.THUMBNAIL));
+		menuPanel = new Navigator(NavType.PILLS);
+		menuPanel.addItem("<b><font color='#3276B1'>Home</font></b>", "#homepage");
+		menuPanel.addItem("<b><font color='#3276B1'>Blog</font></b>", "#blog");
+		menuPanel.addItem("<b><font color='#3276B1'>Materiale</font></b>", "#materiale");
 		
+		//menuPanel.addActionHandler(new MenuPanelHandler());
+		//layout.add(Layouts.as(menuPanel).addStyle(HelperStyles.THUMBNAIL));
+
 		splitPanel.addNorth(menuPanel, 37.0);
 
 	}
@@ -1136,27 +1164,12 @@ public class Faithbook implements EntryPoint {
 			// TODO Auto-generated method stub
 			String selectedItem = event.getAction();
 			if(selectedItem	.equals("home")){
-				loadEastWestSouthPanels(Cookies.getCookie("userCookie"));
-				
+				History.newItem("homepage");
+
 			}
 			if(selectedItem.equals("materiale"))
 			{
-				//Rimozione pannelli centrali
-				if(verticalPanel!=null)
-					verticalPanel.removeFromParent();
-				if(verticalPanel_1!=null)	
-					verticalPanel_1.removeFromParent();
-				if(centerVerticalPanel != null)
-					centerVerticalPanel.removeFromParent();
-				//Creo frame dropbox
-
-				Frame frame = new Frame("./dropbox-prova.html");
-
-				centerVerticalPanel.clear();
-				centerVerticalPanel.add(frame);
-				splitPanel.add(centerVerticalPanel);
-				centerVerticalPanel.setSize("100%", "100%");
-				frame.setSize("100%", "100%");
+				History.newItem("materiale");
 
 			}
 		}
