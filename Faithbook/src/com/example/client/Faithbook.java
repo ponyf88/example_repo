@@ -379,6 +379,7 @@ public class Faithbook implements EntryPoint {
 								Carousel car = new Carousel();
 
 								JSONArray foundPosts = (JSONArray) JSONParser.parseStrict(response.getText());
+								String postID = "";
 								for(int i = 0; i < foundPosts.size(); i++){
 
 									//Window.alert("Lung del JSONArray: " + foundPosts.size());
@@ -388,6 +389,7 @@ public class Faithbook implements EntryPoint {
 									Double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
 									String postContent = ((JSONObject)post.get(2)).get("postContent").isString().stringValue();
 									String postTimestamp = ((JSONObject)post.get(3)).get("timestamp").isString().stringValue();
+									
 									ButtonType postTypeBtn = null;
 									switch(postType.intValue()){
 									case 0:
@@ -405,16 +407,35 @@ public class Faithbook implements EntryPoint {
 									}
 									//car.addItem("<h4>Caption 1</h4>", Layouts.as(
 									//new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(200));
-									car.addItem("<h5>" + postContent + "</h5>" + "<br/>" + postingUser + ", " + postTimestamp, Layouts.as(
+									String addNewPost = "";
+									if (i==0){
+										addNewPost = "<h5>Nuovo Post!</h5>" + "<br/>" + "<br/>" + "<br/>";
+										postID = ((JSONObject)post.get(4)).get("postID").isString().stringValue(); //Commenti solo all'ultimo post
+									}
+									car.addItem(addNewPost + "<h5>" + postContent + "</h5>" + "<br/>" + postingUser + ", " + postTimestamp, Layouts.as(
 											new com.cleanform.gwt.bootstrap.client.ui.Button("", postTypeBtn)).width().height(200));
-
+									car.pause();
 								}
 
 								carContainer.add(car);
-
-								//TODO: Inserire box commenti 
-
-
+								car.pause();
+								String disqusCode = "<div id='disqus_thread'></div>" +
+									    "<script type='text/javascript'>" +								    
+								        "var disqus_shortname = 'ponyf88';" +
+								        "var disqus_identifier = " + postID + ";" + 
+										"/* * * DON'T EDIT BELOW THIS LINE * * */" +
+								        "(function() {" +
+								            "var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;" +
+								            "dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';" +
+								            "(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);" +
+								        "})();" +
+								    "</script>" +
+								    "<noscript>Please enable JavaScript to view the <a href='http://disqus.com/?ref_noscript'>comments powered by Disqus.</a></noscript>" +
+								    "<a href='http://disqus.com' class='dsq-brlink'>comments powered by <span class='logo-disqus'>Disqus</span></a>";
+								//TODO: Inserire box commenti: uno per user o uno x post?
+								HTMLPanel commentsPanel = new HTMLPanel(disqusCode);
+								commentsPanel.setHeight("100px");
+								carContainer.add(commentsPanel);
 
 							}
 
@@ -453,7 +474,7 @@ public class Faithbook implements EntryPoint {
 			//car.setStyleName("btn-success");
 			//Recupero dati dei post
 			recoverWallDataRequest("GET","/ReceiveWallDataServlet?user=" + Cookies.getCookie("userCookie"));
-
+			
 			//Inserimento dati per l'owner del profilo
 			if(Cookies.getCookie("userCookie").equals(visitedUser)){
 
@@ -1004,9 +1025,9 @@ public class Faithbook implements EntryPoint {
 					case "materiale":
 						
 						//Rimozione pannelli centrali
-						if(verticalPanel!=null)
+						if(verticalPanel!= null)
 							verticalPanel.removeFromParent();
-						if(verticalPanel_1!=null)	
+						if(verticalPanel_1!= null)	
 							verticalPanel_1.removeFromParent();
 						if(centerVerticalPanel != null)
 							centerVerticalPanel.removeFromParent();

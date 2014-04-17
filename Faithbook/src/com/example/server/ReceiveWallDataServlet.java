@@ -188,6 +188,8 @@ public class ReceiveWallDataServlet extends HttpServlet {
 			JSONObject postContent = new JSONObject().put("postContent", prevPost.getPostContent());
 
 			JSONObject timestamp = new JSONObject().put("timestamp", prevPost.getTimeStamp());
+			
+			JSONObject postID = new JSONObject().put("postID", prevPost.getPostID());
 
 			post = new JSONArray(); 
 
@@ -195,6 +197,7 @@ public class ReceiveWallDataServlet extends HttpServlet {
 			post.put(1, postType);
 			post.put(2, postContent);
 			post.put(3, timestamp);
+			post.put(4, postID);
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
