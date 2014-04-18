@@ -3,7 +3,6 @@ package com.example.client;
 import com.cleanform.gwt.bootstrap.client.ui.Button.ButtonType;
 import com.cleanform.gwt.bootstrap.client.ui.ListBox;
 import com.cleanform.gwt.bootstrap.client.ui.TextArea;
-import com.cleanform.gwt.bootstrap.js.client.ui.ButtonGroup;
 import com.cleanform.gwt.bootstrap.js.client.ui.Carousel;
 
 
@@ -11,16 +10,12 @@ import com.cleanform.gwt.bootstrap.js.client.ui.Navigator;
 import com.cleanform.gwt.bootstrap.js.client.ui.Navigator.NavType;
 import com.cleanform.gwt.user.client.ActionEvent;
 import com.cleanform.gwt.user.client.ActionEvent.ActionHandler;
-import com.cleanform.gwt.user.client.ui.TabPanel;
 import com.cleanform.gwt.user.layout.client.Layouts;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
-import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style.FontWeight;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -31,15 +26,11 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -90,6 +81,7 @@ public class Faithbook implements EntryPoint {
 	public Navigator menuPanel = null;
 
 	public SubscribePanel centerScrollable = null;
+
 
 	public class TreeItemHandler implements SelectionHandler<TreeItem>{
 
@@ -389,7 +381,7 @@ public class Faithbook implements EntryPoint {
 									Double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
 									String postContent = ((JSONObject)post.get(2)).get("postContent").isString().stringValue();
 									String postTimestamp = ((JSONObject)post.get(3)).get("timestamp").isString().stringValue();
-									
+
 									ButtonType postTypeBtn = null;
 									switch(postType.intValue()){
 									case 0:
@@ -419,22 +411,16 @@ public class Faithbook implements EntryPoint {
 
 								carContainer.add(car);
 								car.pause();
-								String disqusCode = "<div id='disqus_thread'></div>" +
-									    "<script type='text/javascript'>" +								    
-								        "var disqus_shortname = 'ponyf88';" +
-								        "var disqus_identifier = " + postID + ";" + 
-										"/* * * DON'T EDIT BELOW THIS LINE * * */" +
-								        "(function() {" +
-								            "var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;" +
-								            "dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';" +
-								            "(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);" +
-								        "})();" +
-								    "</script>" +
-								    "<noscript>Please enable JavaScript to view the <a href='http://disqus.com/?ref_noscript'>comments powered by Disqus.</a></noscript>" +
-								    "<a href='http://disqus.com' class='dsq-brlink'>comments powered by <span class='logo-disqus'>Disqus</span></a>";
+					
+								String disqusCode =
+										"<div id='disqus_thread'>" + 						
+										"</div>" +
+										"<noscript>Please enable JavaScript to view the <a href='http://disqus.com/?ref_noscript'>comments powered by Disqus.</a></noscript>" +
+										"<a href='http://disqus.com' class='dsq-brlink'>comments powered by <span class='logo-disqus'>Disqus</span></a></body></html>";
 								//TODO: Inserire box commenti: uno per user o uno x post?
 								HTMLPanel commentsPanel = new HTMLPanel(disqusCode);
-								commentsPanel.setHeight("100px");
+								commentsPanel.setHeight("350px");
+								Disqus.showComments(commentsPanel, postID);
 								carContainer.add(commentsPanel);
 
 							}
@@ -457,24 +443,21 @@ public class Faithbook implements EntryPoint {
 			this.setSize("100%", "100%");
 
 			add(carContainer);
-			add(commentContainerPanel);
-			add(insertPostPanel);
+			
+			//add(insertPostPanel);
 
 			carContainer.setSize("100%", "10%");
 			commentContainerPanel.setSize("100%", "40%");
 			//insertPostPanel.getElement().setAttribute("align", "bottom");
 			//verticalPanel_1.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
 			//verticalPanel_2.setSize("100%", "119px");
-			this.setCellVerticalAlignment(insertPostPanel, HasVerticalAlignment.ALIGN_BOTTOM);
-
-			insertPostPanel.setSize("100%", "50%");
 
 			this.visitedUser = _visitedUser;
 
 			//car.setStyleName("btn-success");
 			//Recupero dati dei post
 			recoverWallDataRequest("GET","/ReceiveWallDataServlet?user=" + Cookies.getCookie("userCookie"));
-			
+
 			//Inserimento dati per l'owner del profilo
 			if(Cookies.getCookie("userCookie").equals(visitedUser)){
 
@@ -531,7 +514,7 @@ public class Faithbook implements EntryPoint {
 					public void onClick(ClickEvent event) {
 						if(((TextArea) event.getSource()).getText().equals(toShow)){
 							((TextArea) event.getSource()).setText("");
-							postTextArea.setHeight("150px");
+							postTextArea.setHeight("100px");
 						}
 					}
 
@@ -543,7 +526,7 @@ public class Faithbook implements EntryPoint {
 				com.cleanform.gwt.bootstrap.client.ui.Button insButton = 
 						new com.cleanform.gwt.bootstrap.client.ui.Button("Inserisci", ButtonType.PRIMARY);
 				//TODO: formattare i dati nella textarea in JSON e inviarli con .toString()
-
+				
 
 				insButton.addClickHandler(new SendWallDataHandler());
 
@@ -551,11 +534,14 @@ public class Faithbook implements EntryPoint {
 
 				insertPostPanel.setCellHorizontalAlignment(insButton, HasHorizontalAlignment.ALIGN_CENTER);
 
-
+				commentContainerPanel.add(insertPostPanel);
+			
+				insertPostPanel.setSize("100%", "100px");
 				//setCellVerticalAlignment(insertPostPanel,HasVerticalAlignment.ALIGN_BOTTOM);
 			}
+			
 
-
+			add(commentContainerPanel);
 
 		}
 
@@ -982,6 +968,9 @@ public class Faithbook implements EntryPoint {
 	}	
 
 	public void onModuleLoad() {
+		//registo JSNI
+
+		
 		//Via alla history
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
 			public void onValueChange(ValueChangeEvent<String> event) {
@@ -990,7 +979,7 @@ public class Faithbook implements EntryPoint {
 				// Parse the history token
 				try {
 					switch(historyToken){
-					
+
 					case "homepage":
 						loadInitTopPanels();
 						renderLoggedInWidgets();
@@ -1023,7 +1012,7 @@ public class Faithbook implements EntryPoint {
 						RootLayoutPanel.get().add(splitPanel);
 						break;
 					case "materiale":
-						
+
 						//Rimozione pannelli centrali
 						if(verticalPanel!= null)
 							verticalPanel.removeFromParent();
@@ -1040,7 +1029,7 @@ public class Faithbook implements EntryPoint {
 						splitPanel.add(centerVerticalPanel);
 						centerVerticalPanel.setSize("100%", "100%");
 						frame.setSize("100%", "100%");
-						
+
 						break;
 
 					}  
@@ -1068,7 +1057,7 @@ public class Faithbook implements EntryPoint {
 	}
 
 	public void loadInitTopPanels() {
-		
+
 		//Pulizia iniziale
 		RootLayoutPanel.get().clear();
 		splitPanel.clear();
@@ -1078,12 +1067,12 @@ public class Faithbook implements EntryPoint {
 		navPanel.setStyleName("gwt-FacebookLike");
 
 		splitPanel.setSize("100%", "100%");
-		
-		
-		  
+
+
+
 		// Add text all around.
 		Label lblProba = new Label("faithbook");
-		
+
 		lblProba.setText("faithbook", Direction.LTR );
 		lblProba.setStyleName("gwt-FacebookTitle");
 		lblProba.setSize("150px", "60px");
@@ -1155,10 +1144,10 @@ public class Faithbook implements EntryPoint {
 		navPanel.setCellHorizontalAlignment(logoutButton, HasHorizontalAlignment.ALIGN_RIGHT);
 
 		StringBuilder sb = new StringBuilder();
-		  sb.append("<p><button class='btn btn-default'>Default</button> <button class='btn btn-primary'>Primary</button> "
-			        + "<button class='btn btn-success'>Success</button> <button class='btn btn-info'>Info</button> "
-			        + "<button class='btn btn-warning'>Warning</button> <button class='btn btn-danger'>Danger</button> "
-			        + "<button class='btn btn-link'>Link</button></p>");
+		sb.append("<p><button class='btn btn-default'>Default</button> <button class='btn btn-primary'>Primary</button> "
+				+ "<button class='btn btn-success'>Success</button> <button class='btn btn-info'>Info</button> "
+				+ "<button class='btn btn-warning'>Warning</button> <button class='btn btn-danger'>Danger</button> "
+				+ "<button class='btn btn-link'>Link</button></p>");
 		//com.cleanform.gwt.bootstrap.client.ui.Button homeButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Home",ButtonType.PRIMARY);
 		//com.cleanform.gwt.bootstrap.client.ui.Button newsButton = new com.cleanform.gwt.bootstrap.client.ui.Button("News",ButtonType.PRIMARY);
 		//com.cleanform.gwt.bootstrap.client.ui.Button matButton = new com.cleanform.gwt.bootstrap.client.ui.Button("Materiale",ButtonType.PRIMARY);
@@ -1167,7 +1156,7 @@ public class Faithbook implements EntryPoint {
 		menuPanel.addItem("<b><font color='#3276B1'>Home</font></b>", "#homepage");
 		menuPanel.addItem("<b><font color='#3276B1'>Blog</font></b>", "#blog");
 		menuPanel.addItem("<b><font color='#3276B1'>Materiale</font></b>", "#materiale");
-		
+
 		//menuPanel.addActionHandler(new MenuPanelHandler());
 		//layout.add(Layouts.as(menuPanel).addStyle(HelperStyles.THUMBNAIL));
 
