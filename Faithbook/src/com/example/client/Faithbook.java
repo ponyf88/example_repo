@@ -339,7 +339,8 @@ public class Faithbook implements EntryPoint {
 	//pannello About centrale
 	public class AboutPanel extends VerticalPanel {
 		ListBox widget = null;
-
+		
+		HorizontalPanel horizContainer = new HorizontalPanel();
 		TextArea postTextArea = null;
 		String visitedUser = null;
 		VerticalPanel carContainer = new VerticalPanel();
@@ -419,9 +420,10 @@ public class Faithbook implements EntryPoint {
 										"<a href='http://disqus.com' class='dsq-brlink'>comments powered by <span class='logo-disqus'>Disqus</span></a></body></html>";
 								//TODO: Inserire box commenti: uno per user o uno x post?
 								HTMLPanel commentsPanel = new HTMLPanel(disqusCode);
-								commentsPanel.setHeight("350px");
+								//commentsPanel.setHeight("100px");
 								Disqus.showComments(commentsPanel, postID);
 								carContainer.add(commentsPanel);
+								//carContainer.setCellHeight(commentsPanel, "100px");
 
 							}
 
@@ -441,13 +443,19 @@ public class Faithbook implements EntryPoint {
 		public AboutPanel(String _visitedUser) {
 
 			this.setSize("100%", "100%");
-
+			
+			
+			insertPostPanel.setSize("100%", "100px");
+			
+			add(insertPostPanel);
+			
+			//this.setCellVerticalAlignment(carContainer, HasVerticalAlignment.ALIGN_BOTTOM);
 			add(carContainer);
 			
-			//add(insertPostPanel);
-
-			carContainer.setSize("100%", "10%");
-			commentContainerPanel.setSize("100%", "40%");
+		
+			//this.setCellVerticalAlignment(insertPostPanel, HasVerticalAlignment.ALIGN_BOTTOM);
+			carContainer.setSize("100%", "200px");
+			//commentContainerPanel.setSize("100%", "40%");
 			//insertPostPanel.getElement().setAttribute("align", "bottom");
 			//verticalPanel_1.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
 			//verticalPanel_2.setSize("100%", "119px");
@@ -500,7 +508,7 @@ public class Faithbook implements EntryPoint {
 						}
 					}           
 				}
-
+				
 				insertPostPanel.add(widget);
 				widget.setWidth("100%");
 
@@ -509,20 +517,21 @@ public class Faithbook implements EntryPoint {
 				String toShow = "Inserisci qui il tuo commento...";
 				postTextArea.setText(toShow);
 				postTextArea.addClickHandler(new ClickHandler(){
-					String toShow = "Inserisci qui il tuo commento...";
+					String toShow = "Inserisci qui un nuovo messaggio...";
 					@Override
 					public void onClick(ClickEvent event) {
 						if(((TextArea) event.getSource()).getText().equals(toShow)){
 							((TextArea) event.getSource()).setText("");
-							postTextArea.setHeight("100px");
+							postTextArea.setHeight("80px");
 						}
 					}
 
 				});
-
-				insertPostPanel.add(postTextArea);
+				
+				horizContainer.add(postTextArea);
 				postTextArea.setHeight("40px");
-				postTextArea.setWidth("100%");
+				postTextArea.setWidth("80%");
+				
 				com.cleanform.gwt.bootstrap.client.ui.Button insButton = 
 						new com.cleanform.gwt.bootstrap.client.ui.Button("Inserisci", ButtonType.PRIMARY);
 				//TODO: formattare i dati nella textarea in JSON e inviarli con .toString()
@@ -530,17 +539,17 @@ public class Faithbook implements EntryPoint {
 
 				insButton.addClickHandler(new SendWallDataHandler());
 
-				insertPostPanel.add(insButton);
+				horizContainer.add(insButton);
+				insertPostPanel.add(horizContainer);
+				//insertPostPanel.setCellHorizontalAlignment(insButton, HasHorizontalAlignment.ALIGN_CENTER);
 
-				insertPostPanel.setCellHorizontalAlignment(insButton, HasHorizontalAlignment.ALIGN_CENTER);
-
-				commentContainerPanel.add(insertPostPanel);
+				//commentContainerPanel.add(insertPostPanel);
 			
-				insertPostPanel.setSize("100%", "100px");
+				
 				//setCellVerticalAlignment(insertPostPanel,HasVerticalAlignment.ALIGN_BOTTOM);
 			}
 			
-
+			commentContainerPanel.setSize("100%", "100px");
 			add(commentContainerPanel);
 
 		}
