@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.example.data.MemoryManager;
 import com.example.data.UserProfileData;
+import com.example.feed.Feed;
+import com.example.feed.FeedMessage;
+import com.example.feed.RSSFeedParser;
 import com.google.appengine.api.datastore.Blob;
 
 public class ImageServlet extends HttpServlet {
@@ -37,7 +40,17 @@ public class ImageServlet extends HttpServlet {
 		System.out.println("letti " + imageProfileData.length + " byte");
 		resp.setContentType("image/jpeg");
 
-
+		//prova lettura di feed RSS 
+	    RSSFeedParser parser = new RSSFeedParser("http://goofynomics.blogspot.it/feeds/posts/default?alt=rss");
+	    Feed feed = parser.readFeed();
+	    System.out.println(feed);
+	    for (FeedMessage message : feed.getMessages()) {
+	      System.out.println(message);
+	      
+	    }
+		
+		
+		
 		resp.setContentLength(imageProfileData.length);
 
 		resp.getOutputStream().write(imageProfileData);

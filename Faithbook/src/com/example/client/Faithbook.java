@@ -20,6 +20,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -60,8 +62,8 @@ public class Faithbook implements EntryPoint {
 	//pannelli principali
 	final SplitLayoutPanel splitPanel = new SplitLayoutPanel(5);
 	public HorizontalPanel navPanel = null;
-	public VerticalPanel verticalPanel_1 = null;
-	public VerticalPanel verticalPanel = null;
+	public VerticalPanel eastPanel = null;
+	public VerticalPanel westPanel = null;
 	public VerticalPanel centerVerticalPanel = null;
 	public Label lblCreditsLink = null;
 	private Label lblCreditsLink_1;
@@ -81,7 +83,9 @@ public class Faithbook implements EntryPoint {
 	public Navigator menuPanel = null;
 
 	public SubscribePanel centerScrollable = null;
-
+	
+	//Stringhe per layout
+	String toShow = "Inserisci qui il nuovo messaggio in bacheca...";
 
 	public class TreeItemHandler implements SelectionHandler<TreeItem>{
 
@@ -142,10 +146,10 @@ public class Faithbook implements EntryPoint {
 	private void loadEastWestSouthPanels(String visitedUser){
 
 		//Rimuovo i pannelli east, west south presenti
-		if(verticalPanel!=null)
-			verticalPanel.removeFromParent();
-		if(verticalPanel_1!=null)	
-			verticalPanel_1.removeFromParent();
+		if(westPanel!=null)
+			westPanel.removeFromParent();
+		if(eastPanel!=null)	
+			eastPanel.removeFromParent();
 		if(lblCreditsLink_1!=null)	
 			lblCreditsLink_1.removeFromParent();
 
@@ -162,14 +166,14 @@ public class Faithbook implements EntryPoint {
 
 
 		//ridefinizione dei pannelli centrali
-		verticalPanel_1 = new VerticalPanel();
-		verticalPanel_1.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-		verticalPanel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		eastPanel = new VerticalPanel();
+		eastPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
+		eastPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
-		verticalPanel_1.setSize("100%", "20%");
+		eastPanel.setSize("100%", "20%");
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel);
+		eastPanel.add(horizontalPanel);
 
 		suggestBox = new TextBox();
 		horizontalPanel.add(suggestBox);
@@ -189,7 +193,7 @@ public class Faithbook implements EntryPoint {
 		//button.setText("Trova Persone");
 		//button.setStylePrimaryName("uibutton.confirm");
 		//button.setStyleName("TreeItemButton-Custom");
-		verticalPanel_1.setCellHorizontalAlignment(button, HasHorizontalAlignment.ALIGN_CENTER);
+		eastPanel.setCellHorizontalAlignment(button, HasHorizontalAlignment.ALIGN_CENTER);
 		//button.setSize("98px", "20px");
 		button.addClickHandler(new SearchFriendHandler());
 
@@ -198,8 +202,8 @@ public class Faithbook implements EntryPoint {
 		verticalPanel_2.setStyleName("gwt-MenuPanelRight");
 		verticalPanel_2.setBorderWidth(0);
 		verticalPanel_2.setTitle("Amici");
-		verticalPanel_1.add(verticalPanel_2);
-		verticalPanel_1.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
+		eastPanel.add(verticalPanel_2);
+		eastPanel.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
 		verticalPanel_2.setSize("100%", "119px");
 
 		scrollPanel = new ScrollPanel();
@@ -220,25 +224,25 @@ public class Faithbook implements EntryPoint {
 		verticalPanel_3.setBorderWidth(0);
 		verticalPanel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel_3.setTitle("Chat");
-		verticalPanel_1.add(verticalPanel_3);
-		verticalPanel_1.setCellHeight(verticalPanel_3, "100%");
-		verticalPanel_1.setCellHorizontalAlignment(verticalPanel_3, HasHorizontalAlignment.ALIGN_CENTER);
+		eastPanel.add(verticalPanel_3);
+		eastPanel.setCellHeight(verticalPanel_3, "100%");
+		eastPanel.setCellHorizontalAlignment(verticalPanel_3, HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel_3.setSize("100%", "120px");
 
-		verticalPanel = new VerticalPanel();
-		verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		verticalPanel.setStyleName("gwt-MenuPanelLeft");
-		verticalPanel.setBorderWidth(0);
-		verticalPanel.setSize("100%", "80%");
+		westPanel = new VerticalPanel();
+		westPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		westPanel.setStyleName("gwt-MenuPanelLeft");
+		westPanel.setBorderWidth(0);
+		
 
 		image = new Image();
 		image.setStyleName("gwt-TabPanelBottom");
 		image.setTitle("Immagine");
 		//Passare nome utente
 		image.setUrl("/images?imageType=profile&user=" + visitedUser);
-		verticalPanel.add(image);
-		verticalPanel.setCellVerticalAlignment(image, HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_CENTER);
+		westPanel.add(image);
+		westPanel.setCellVerticalAlignment(image, HasVerticalAlignment.ALIGN_MIDDLE);
+		westPanel.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_CENTER);
 		image.setSize("140px", "150px");
 
 		Tree tree = new Tree();
@@ -275,7 +279,7 @@ public class Faithbook implements EntryPoint {
 		button_1.setText("+ Aggiungi agli Amici");
 		button_1.setStylePrimaryName("uibutton.confirm");
 		button_1.setStyleName("TreeItemButton-Custom");
-		verticalPanel.add(button_1);
+		westPanel.add(button_1);
 		button_1.setSize("140px", "20px");
 
 		if(visitedUser.equals(Cookies.getCookie("userCookie")))
@@ -285,11 +289,11 @@ public class Faithbook implements EntryPoint {
 			button_1.setVisible(true);
 		}
 
-		verticalPanel.add(tree);
-		verticalPanel.setCellVerticalAlignment(tree, HasVerticalAlignment.ALIGN_MIDDLE);
-		verticalPanel.setCellHorizontalAlignment(tree, HasHorizontalAlignment.ALIGN_CENTER);
-		verticalPanel.setCellHeight(tree, "100%");
-		verticalPanel.setCellWidth(tree, "100%");
+		westPanel.add(tree);
+		westPanel.setCellVerticalAlignment(tree, HasVerticalAlignment.ALIGN_MIDDLE);
+		westPanel.setCellHorizontalAlignment(tree, HasHorizontalAlignment.ALIGN_CENTER);
+		westPanel.setCellHeight(tree, "100%");
+		westPanel.setCellWidth(tree, "100%");
 		tree.setSize("100%", "100%");
 		// Add scrollable text to the center.
 		String centerText = "";
@@ -297,8 +301,9 @@ public class Faithbook implements EntryPoint {
 			centerText += " " + centerText;
 		}
 
-		splitPanel.addWest(verticalPanel, 350.0);
-		splitPanel.addEast(verticalPanel_1, 350.0);
+		splitPanel.addWest(westPanel, 300.0);
+		splitPanel.addEast(eastPanel, 300.0);
+		westPanel.setSize("100%","70%");
 		lblCreditsLink_1.setWidth("100%");
 		splitPanel.addSouth(lblCreditsLink_1, 70.0);
 
@@ -310,7 +315,7 @@ public class Faithbook implements EntryPoint {
 		centerVerticalPanel.setWidth("100%");
 		centerVerticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		centerVerticalPanel.add(centerBasicData);
-		//verticalPanel.setCellHorizontalAlignment(centerBasicData, HasHorizontalAlignment.ALIGN_CENTER);
+		//westPanel.setCellHorizontalAlignment(centerBasicData, HasHorizontalAlignment.ALIGN_CENTER);
 
 		splitPanel.add(centerVerticalPanel);
 		centerVerticalPanel.setWidth("100%");
@@ -379,6 +384,9 @@ public class Faithbook implements EntryPoint {
 									JSONArray post = (JSONArray) foundPosts.get(i);
 
 									String postingUser = ((JSONObject)post.get(0)).get("postingUser").isString().stringValue();
+									
+									postID = postingUser + "_wall"; //Setto il postID del Wall dello userName!
+									
 									Double postType = ((JSONObject)post.get(1)).get("postType").isNumber().doubleValue();
 									String postContent = ((JSONObject)post.get(2)).get("postContent").isString().stringValue();
 									String postTimestamp = ((JSONObject)post.get(3)).get("timestamp").isString().stringValue();
@@ -401,10 +409,10 @@ public class Faithbook implements EntryPoint {
 									//car.addItem("<h4>Caption 1</h4>", Layouts.as(
 									//new com.cleanform.gwt.bootstrap.client.ui.Button("Item1", ButtonType.SUCCESS)).width().height(200));
 									String addNewPost = "";
-									if (i==0){
-										addNewPost = "<h5>Nuovo Post!</h5>" + "<br/>" + "<br/>" + "<br/>";
-										postID = ((JSONObject)post.get(4)).get("postID").isString().stringValue(); //Commenti solo all'ultimo post
-									}
+									 
+									if (i==0)
+										addNewPost = "<h5>Nuovo Post!</h5>" + "<br/>" + "<br/>";
+								
 									car.addItem(addNewPost + "<h5>" + postContent + "</h5>" + "<br/>" + postingUser + ", " + postTimestamp, Layouts.as(
 											new com.cleanform.gwt.bootstrap.client.ui.Button("", postTypeBtn)).width().height(200));
 									car.pause();
@@ -457,7 +465,7 @@ public class Faithbook implements EntryPoint {
 			carContainer.setSize("100%", "200px");
 			//commentContainerPanel.setSize("100%", "40%");
 			//insertPostPanel.getElement().setAttribute("align", "bottom");
-			//verticalPanel_1.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
+			//eastPanel.setCellVerticalAlignment(verticalPanel_2, HasVerticalAlignment.ALIGN_BOTTOM);
 			//verticalPanel_2.setSize("100%", "119px");
 
 			this.visitedUser = _visitedUser;
@@ -514,10 +522,14 @@ public class Faithbook implements EntryPoint {
 
 				//Inserimento dati
 				postTextArea = new TextArea();
-				String toShow = "Inserisci qui il tuo commento...";
+				
+				postTextArea.setHeight("36px");
+				postTextArea.setWidth("100%");
+				
+				
 				postTextArea.setText(toShow);
 				postTextArea.addClickHandler(new ClickHandler(){
-					String toShow = "Inserisci qui un nuovo messaggio...";
+					
 					@Override
 					public void onClick(ClickEvent event) {
 						if(((TextArea) event.getSource()).getText().equals(toShow)){
@@ -527,10 +539,19 @@ public class Faithbook implements EntryPoint {
 					}
 
 				});
+				/*
+				postTextArea.addMouseOutHandler(new MouseOutHandler(){
+
+					@Override
+					public void onMouseOut(MouseOutEvent event) {
+						((TextArea) event.getSource()).setText(toShow);
+						postTextArea.setHeight("36px");
+					}
+					
+				});*/
 				
 				horizContainer.add(postTextArea);
-				postTextArea.setHeight("40px");
-				postTextArea.setWidth("80%");
+				
 				
 				com.cleanform.gwt.bootstrap.client.ui.Button insButton = 
 						new com.cleanform.gwt.bootstrap.client.ui.Button("Inserisci", ButtonType.PRIMARY);
@@ -540,7 +561,9 @@ public class Faithbook implements EntryPoint {
 				insButton.addClickHandler(new SendWallDataHandler());
 
 				horizContainer.add(insButton);
+				horizContainer.setCellVerticalAlignment(insButton, HasVerticalAlignment.ALIGN_MIDDLE);
 				insertPostPanel.add(horizContainer);
+				horizContainer.setWidth("100%");
 				//insertPostPanel.setCellHorizontalAlignment(insButton, HasHorizontalAlignment.ALIGN_CENTER);
 
 				//commentContainerPanel.add(insertPostPanel);
@@ -1023,10 +1046,10 @@ public class Faithbook implements EntryPoint {
 					case "materiale":
 
 						//Rimozione pannelli centrali
-						if(verticalPanel!= null)
-							verticalPanel.removeFromParent();
-						if(verticalPanel_1!= null)	
-							verticalPanel_1.removeFromParent();
+						if(westPanel!= null)
+							westPanel.removeFromParent();
+						if(eastPanel!= null)	
+							eastPanel.removeFromParent();
 						if(centerVerticalPanel != null)
 							centerVerticalPanel.removeFromParent();
 						//Creo frame dropbox
@@ -1184,7 +1207,10 @@ public class Faithbook implements EntryPoint {
 			String selectedItem = event.getAction();
 			if(selectedItem	.equals("home")){
 				History.newItem("homepage");
-
+			}
+			if(selectedItem	.equals("blog")){
+				
+				History.newItem("blog");
 			}
 			if(selectedItem.equals("materiale"))
 			{

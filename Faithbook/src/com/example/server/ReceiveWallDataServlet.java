@@ -96,7 +96,7 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		Date date = new Date(ts.getTime());
 
 		// S is the millisecond
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
 		
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
 		
