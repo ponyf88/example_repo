@@ -7,9 +7,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class BlogrollPanel extends VerticalPanel{
 	
-	private Label labelFeeds;
-	private Label labelLinks;
-	private StackPanel blogrollMenu = null;
+	Label labelFeeds;
+	Label labelLinks;
+	StackPanel blogrollMenu = null;
 	final String feedTitle = "Feed";
 	final String linkTitle = "Blog collegati";
 	
@@ -18,17 +18,24 @@ public class BlogrollPanel extends VerticalPanel{
 		
 		blogrollMenu = new StackPanel();
 		
-		labelFeeds.setStyleName("gwt-DisclosurePanel-header");
-		labelLinks.setStyleName("gwt-DisclosurePanel-header");
+		labelFeeds = new Label("esempio");
+		labelLinks = new Label(linkTitle);
+		//labelFeeds.setStyleName("gwt-DisclosurePanel-header");
+		//labelLinks.setStyleName("gwt-DisclosurePanel-header");
+		
 		blogrollMenu.add(labelFeeds, feedTitle, false);
 		//Aggiungi elenco di blog da cui prendere feed
 		
-		blogrollMenu.add(labelLinks, feedTitle, false);
+		blogrollMenu.add(labelLinks, linkTitle, false);
+		
 		//aggiungi semplici link ai blog, ad es http://ilsicomoro.jimdo.com/
 		
-		Anchor linkSicomoro = new Anchor("http://ilsicomoro.jimdo.com/");
+		Anchor linkSicomoro = new Anchor("Il Sicomoro","http://ilsicomoro.jimdo.com/");
 		
 		blogrollMenu.add(linkSicomoro);
+		
+		add(blogrollMenu);
+		blogrollMenu.setSize("100%", "100%");
 	}
 
 }

@@ -1063,8 +1063,26 @@ public class Faithbook implements EntryPoint {
 						frame.setSize("100%", "100%");
 
 						break;
+						
+					case "blog":
+
+					
+						if(westPanel!= null)
+							westPanel.clear();
+						if(eastPanel!= null)	
+							eastPanel.removeFromParent(); //Rimuovo pannello est
+						if(centerVerticalPanel != null)
+							centerVerticalPanel.removeFromParent(); //Rimuovo pannello centrale
+						//Inserisco widget blogroll
+						BlogrollPanel brPanel = new BlogrollPanel();
+						westPanel.add(brPanel);
+						
+						brPanel.setSize("100%","100%");
+						centerVerticalPanel.clear();
+						break;
 
 					}  
+					
 
 				} catch (IndexOutOfBoundsException e) {
 					//carico homepage
