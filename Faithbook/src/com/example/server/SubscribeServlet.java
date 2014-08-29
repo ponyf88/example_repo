@@ -36,7 +36,7 @@ public class SubscribeServlet extends HttpServlet {
 		String sentUser = req.getParameter("user");
 		String sentPw = req.getParameter("pw"); 
 		
-		
+		final int TWO_WEEKS = 14*24*60*60; //due settimane
 		
 		//resp.getWriter().println("Sei loggato!");
 
@@ -46,10 +46,14 @@ public class SubscribeServlet extends HttpServlet {
 			resp.getWriter().println("Errore di autenticazione");
 		else{
 			//Setto il cookie
-			Cookie userCookie = new Cookie("userCookie",newUser.getUsername());
-			System.out.println("Setto il cookie di login per:" + newUser.getUsername());
+			String sessionId = req.getSession().getId();
+			Cookie userCookie = new Cookie("JSESSIONID",sessionId);
+			//System.out.println("Setto il cookie di login per:" + newUser.getUsername());
+			
+			//TODO: salvare in memoria l'oggetto sessione con user e jsessionid associato
+			
 			//Durata: 1 giorno
-			userCookie.setMaxAge(24*60*60);
+			userCookie.setMaxAge(TWO_WEEKS);
 			resp.addCookie(userCookie);
 
 			JSONArray userData = new JSONArray();
@@ -200,8 +204,8 @@ public class SubscribeServlet extends HttpServlet {
 				}
 			}
 			if(newUser!=null){
-				MemoryManager.createUser(newUser.getUsername());
-				MemoryManager.updateUser(newUser);
+				//MemoryManager.createUser(newUser.getUsername());
+				MemoryManager.createUser(newUser);
 				
 				System.out.println("salvato user " + newUser.getFirstName() + " " + newUser.getSecondName() + " con username: " + newUser.getUsername());
 			}

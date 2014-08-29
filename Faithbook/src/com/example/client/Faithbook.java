@@ -113,7 +113,7 @@ public class Faithbook implements EntryPoint {
 			}
 			if(item.getTitle().equals("Amici")){
 				//Passare i dati di base da elaborare al pannello	
-				//image.setUrl("/images?imageType=profile&user=" + Cookies.getCookie("userCookie"));
+				//image.setUrl("/checkSession?action=image&imageType=profile&user=" + Cookies.getCookie("userCookie"));
 				FriendListPanel centerBasicData = null;
 
 				centerBasicData = new FriendListPanel(visitedUser);
@@ -126,7 +126,7 @@ public class Faithbook implements EntryPoint {
 			}
 			if(item.getTitle().equals("Bacheca")){
 				//Passare i dati di base da elaborare al pannello	
-				//image.setUrl("/images?imageType=profile&user=" + Cookies.getCookie("userCookie"));
+				//image.setUrl("/checkSession?action=image&imageType=profile&user=" + Cookies.getCookie("userCookie"));
 				centerVerticalPanel.clear();
 				AboutPanel centerBasicData = null;
 
@@ -145,7 +145,7 @@ public class Faithbook implements EntryPoint {
 
 	private void loadEastWestSouthPanels(String visitedUser){
 
-		//Rimuovo i pannelli east, west south presenti
+		//Rimuovo i pannelli east, west, south presenti
 		if(westPanel!=null)
 			westPanel.removeFromParent();
 		if(eastPanel!=null)	
@@ -153,12 +153,13 @@ public class Faithbook implements EntryPoint {
 		if(lblCreditsLink_1!=null)	
 			lblCreditsLink_1.removeFromParent();
 
-		//Pannello centrale
+		//pannello centrale
 		if(centerVerticalPanel != null)
 			centerVerticalPanel.removeFromParent();
 
 		if(splitPanel != null)
 			splitPanel.removeFromParent();
+		
 		//carico logout button
 		sendButton.removeFromParent();
 		txtbxUser.removeFromParent();
@@ -182,8 +183,6 @@ public class Faithbook implements EntryPoint {
 		suggestBox.setStyleName("gwt-FacebookTextBox");
 		suggestBox.setTitle("Ricerca amici");
 		suggestBox.setSize("100%", "20px");
-
-
 
 		com.cleanform.gwt.bootstrap.client.ui.Button button = new com.cleanform.gwt.bootstrap.client.ui.Button("Trova Persone", ButtonType.PRIMARY);
 		button.setStyleName("btn btn-primary btn-xs");
@@ -239,7 +238,7 @@ public class Faithbook implements EntryPoint {
 		image.setStyleName("gwt-TabPanelBottom");
 		image.setTitle("Immagine");
 		//Passare nome utente
-		image.setUrl("/images?imageType=profile&user=" + visitedUser);
+		image.setUrl("/checkSession?action=image&imageType=profile&user=" + visitedUser);
 		westPanel.add(image);
 		westPanel.setCellVerticalAlignment(image, HasVerticalAlignment.ALIGN_MIDDLE);
 		westPanel.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_CENTER);
@@ -282,6 +281,7 @@ public class Faithbook implements EntryPoint {
 		westPanel.add(button_1);
 		button_1.setSize("140px", "20px");
 
+		//Se il profilo non è il mio, posso aggiungerlo come amico
 		if(visitedUser.equals(Cookies.getCookie("userCookie")))
 			button_1.setVisible(false);
 		else{
@@ -451,8 +451,7 @@ public class Faithbook implements EntryPoint {
 		public AboutPanel(String _visitedUser) {
 
 			this.setSize("100%", "100%");
-			
-			
+				
 			insertPostPanel.setSize("100%", "100px");
 			
 			add(insertPostPanel);
@@ -460,7 +459,6 @@ public class Faithbook implements EntryPoint {
 			//this.setCellVerticalAlignment(carContainer, HasVerticalAlignment.ALIGN_BOTTOM);
 			add(carContainer);
 			
-		
 			//this.setCellVerticalAlignment(insertPostPanel, HasVerticalAlignment.ALIGN_BOTTOM);
 			carContainer.setSize("100%", "200px");
 			//commentContainerPanel.setSize("100%", "40%");
@@ -474,7 +472,8 @@ public class Faithbook implements EntryPoint {
 			//Recupero dati dei post
 			recoverWallDataRequest("GET","/ReceiveWallDataServlet?user=" + Cookies.getCookie("userCookie"));
 
-			//Inserimento dati per l'owner del profilo
+			//Inserimento dati --> SPOSTARE QUESTO CONTROLLO LATO SERVER PASSANDO VISITED USER E JSESSIONID (da cui latyo server verrà ricavato lo userId) DI CUI VERIFICARE L'UGUAGLIANZA,  
+			//ALTRIMENTI UN UTENTE AUTENTICATO PUò AGGIUNGERE AMICI A TUTTI CON LA REQUEST HTTP GIUSTA
 			if(Cookies.getCookie("userCookie").equals(visitedUser)){
 
 				//Scelta categoria
@@ -699,7 +698,7 @@ public class Faithbook implements EntryPoint {
 
 									Image contactImage = new Image();
 									contactImage.setSize("45px", "45px");
-									contactImage.setUrl("/images?imageType=profile&user=" + ((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
+									contactImage.setUrl("/checkSession?action=image&imageType=profile&user=" + ((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
 
 									contactImage.setTitle(((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
 									//contactImage.addClickHandler(new VisitProfileHandler());
@@ -887,7 +886,7 @@ public class Faithbook implements EntryPoint {
 
 									Image contactImage = new Image();
 									contactImage.setSize("45px", "45px");
-									contactImage.setUrl("/images?imageType=profile&user=" + ((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
+									contactImage.setUrl("/checkSession?action=image&imageType=profile&user=" + ((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
 
 									contactImage.setTitle(((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
 									//contactImage.addClickHandler(new VisitProfileHandler());
@@ -1180,7 +1179,7 @@ public class Faithbook implements EntryPoint {
 		Image contactImage = new Image();
 		contactImage.setSize("45px", "45px");
 		contactImage.setStyleName("border: 2px solid white");
-		contactImage.setUrl("/images?imageType=profile&user=" + Cookies.getCookie("userCookie"));
+		contactImage.setUrl("/checkSession?action=image&imageType=profile&user=" + Cookies.getCookie("userCookie"));
 		navPanel.add(contactImage);
 
 		//Ricarico bottone logout

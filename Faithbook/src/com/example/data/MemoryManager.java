@@ -46,7 +46,7 @@ public class MemoryManager {
 		}
 	} 
 
-	//Cerco user
+	//Cerco user con combinazioni di nome e cognome o username
 	public static synchronized Iterator<UserProfileData> searchUser(String searchData) {
 
 		searchData = searchData.toLowerCase();
@@ -116,6 +116,91 @@ public class MemoryManager {
 		return null;
 	} 
 
+
+
+
+	//Creo user session --> Da usare post login
+	public static synchronized UserSession createUserSession(UserSession newSession) {
+
+		userCache = getMemcache("userSessionCache");
+
+		ObjectDatastore datastore = new AnnotationObjectDatastore();
+
+		UserSession aSession = (UserSession) userCache.get(newSession.getUsername()); 
+
+		//Creo nuova sessione se non esistente
+		if (aSession == null) {
+			aSession = datastore.load(UserSession.class, newSession.getUsername());		
+		}
+		else{
+
+			try {
+				datastore.associate(aSession);
+				System.err.println("user datastore associate" + aSession);
+			} catch(IllegalArgumentException e) {
+
+				System.err.println("user associate failed");
+			} finally {
+				datastore.update(aSession);
+				System.err.println("user datastore update" + aSession);
+			}
+		}
+
+		//Agg cache
+		userCache.put(aSession.getUsername(), aSession);
+
+		return aSession;
+	} 
+
+	//Estraggo sessionId --> da usare in dispatcher
+	public static synchronized UserProfileData getUserSession(String username) {
+
+		userCache = getMemcache("userCache");
+
+		ObjectDatastore datastore = new AnnotationObjectDatastore();
+
+		UserProfileData aUser = (UserProfileData) userCache.get(username); 
+
+		if (aUser == null) {
+			aUser = datastore.load(UserProfileData.class, username);		
+		}
+
+		return aUser;
+	} 
+
+	
+	//Aggiornamento/creazione di uno user
+	public static synchronized void createUser(UserProfileData aUser){
+		userCache = getMemcache("userCache");
+		userCache.put(aUser.getUsername(), aUser);
+		
+		ObjectDatastore datastore = new AnnotationObjectDatastore();
+
+		//Cerco nella cache uno user con lo stesso username
+		UserProfileData aUserFound = (UserProfileData) userCache.get(aUser.getUsername()); 
+
+		//carico nuovo user dal datastore direttamente
+		if (aUserFound == null) {
+			aUserFound = datastore.load(UserProfileData.class, aUser.getUsername());		
+		}
+		
+		if (aUserFound == null) {
+			try {
+				datastore.associate(aUserFound);
+				System.err.println("user datastore associate"+aUserFound);
+			} catch(IllegalArgumentException e) {
+	
+				System.err.println("user associate failed");
+			} finally {
+				datastore.update(aUserFound);
+				System.err.println("user datastore update"+aUserFound);
+			}
+		}
+		else{
+			datastore.store(aUser); //Salvo lo user fornito in input
+		}
+	}
+	
 	//Estraggo user
 	public static synchronized UserProfileData getUser(String username) {
 
@@ -124,53 +209,15 @@ public class MemoryManager {
 		ObjectDatastore datastore = new AnnotationObjectDatastore();
 
 		UserProfileData aUser = (UserProfileData) userCache.get(username); 
-
+		
+		//Ricerca con chiave
 		if (aUser == null) {
 			aUser = datastore.load(UserProfileData.class, username);		
 		}
-
+		
 		return aUser;
 	} 
-
-
-	//Creo user
 	
-
-	//Creo user
-	public static synchronized UserProfileData createUser(String username) {
-
-		userCache = getMemcache("userCache");
-
-		ObjectDatastore datastore = new AnnotationObjectDatastore();
-
-		UserProfileData aUser = (UserProfileData) userCache.get(username); 
-
-		//Creo nuovo user
-		if (aUser == null) {
-			aUser = datastore.load(UserProfileData.class, username);		
-		}
-
-		return aUser;
-	} 
-
-
-	//Aggiornamento di uno user
-	public static synchronized void updateUser(UserProfileData aUser){
-		userCache = getMemcache("userCache");
-		userCache.put(aUser.getUsername(), aUser);
-
-		ObjectDatastore datastore = new AnnotationObjectDatastore();
-		try {
-			datastore.associate(aUser);
-			System.err.println("user datastore associate"+aUser);
-		} catch(IllegalArgumentException e) {
-
-			System.err.println("user associate failed");
-		} finally {
-			datastore.update(aUser);
-			System.err.println("user datastore update"+aUser);
-		}
-	}
 
 	//Creo un post
 	public static synchronized UserWallData createPost(String postID) {
@@ -181,7 +228,7 @@ public class MemoryManager {
 
 		UserWallData aPost = (UserWallData) userCache.get(postID); 
 
-		//Creo nuovo user
+		//Creo nuovo post
 		if (aPost == null) {
 			System.out.println("Creato post vuoto");
 			aPost = datastore.load(UserWallData.class, postID);		
@@ -191,7 +238,7 @@ public class MemoryManager {
 	} 
 
 
-	//Aggiornamento di un post
+	//Aggiornamento di un post 
 	public static synchronized void updatePost(UserWallData aWall){
 		userCache = getMemcache("userCache");
 		userCache.put(aWall.getPostID(), aWall);
@@ -208,8 +255,8 @@ public class MemoryManager {
 			System.err.println("post datastore update"+aWall);
 		}
 	}
-	
-	//Estraggo user
+
+	//Estraggo post
 	public static synchronized UserWallData getPost(String postID) {
 
 		userCache = getMemcache("userCache");
@@ -224,8 +271,8 @@ public class MemoryManager {
 
 		return aPost;
 	} 
-	
-	
+
+
 	//Prendo l'ultimo post di user dato in input
 	public static synchronized UserWallData getLastPostOf(String username) {
 
@@ -236,22 +283,22 @@ public class MemoryManager {
 		//Itero i post per trovare il più recente
 		Iterator<UserWallData> foundPostsOf =  datastore.find().type(UserWallData.class).
 				addFilter("username",FilterOperator.EQUAL , username).now();
-		
+
 		ArrayList<Integer> userPostIds = new ArrayList<Integer>();
-		
+
 		while(foundPostsOf.hasNext()){
 			int postIdNum = Integer.parseInt(foundPostsOf.next().getPostID().replaceFirst(username, ""));
-			
+
 			userPostIds.add(postIdNum);
 		}
-		
+
 		if(userPostIds.size() > 0){
-		int lastPostCounter = Collections.max(userPostIds);
-		
-		System.out.println("Estraggo ultimo post: " +  username + lastPostCounter);
-		
-		
-		return getPost(username + lastPostCounter);
+			int lastPostCounter = Collections.max(userPostIds);
+
+			System.out.println("Estraggo ultimo post: " +  username + lastPostCounter);
+
+
+			return getPost(username + lastPostCounter);
 		}
 		else
 			return null; //nessun Post dello user con username

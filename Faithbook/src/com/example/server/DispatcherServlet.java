@@ -35,7 +35,6 @@ public class DispatcherServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		RequestDispatcher rd = null;
 
-		
 		try {
 			switch(action){
 			case "friends":
