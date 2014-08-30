@@ -1,25 +1,19 @@
 package com.example.server;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.data.MemoryManager;
-import com.example.data.UserProfileData;
-import com.example.feed.Feed;
-import com.example.feed.FeedMessage;
-import com.example.feed.RSSFeedParser;
-import com.google.appengine.api.datastore.Blob;
-
 //classe di validazione della sessione
 public class DispatcherServlet extends HttpServlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) 
 			throws IOException {
@@ -34,7 +28,8 @@ public class DispatcherServlet extends HttpServlet {
 		 */
 		String action = req.getParameter("action");
 		RequestDispatcher rd = null;
-
+		
+		
 		try {
 			switch(action){
 			case "friends":

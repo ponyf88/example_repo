@@ -107,8 +107,8 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		newPost.setTimeStamp(timestamp);
 
 		//da salvare con MemoryManager
-		MemoryManager.createPost(newPost.getPostID());
-		MemoryManager.updatePost(newPost);
+		
+		MemoryManager.createPost(newPost);
 	}
 
 

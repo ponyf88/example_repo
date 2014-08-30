@@ -38,7 +38,7 @@ public class HandleFriendsServlet extends HttpServlet {
 						oldList = new ArrayList<String>();
 					oldList.add(req.getParameter("addedFriend").toString());
 					userProfileData.setFriendList(oldList);
-					MemoryManager.updateUser(userProfileData);
+					MemoryManager.createUser(userProfileData);
 					System.out.println("Aggiunto amico:" + oldList.get(oldList.size()-1));
 					resp.getWriter().println("Aggiunto amico:" + oldList.get(oldList.size()-1));
 				}

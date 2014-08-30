@@ -8,6 +8,20 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<!-- TODO: Add <servlet> tags for each servlet here. -->
 
 	<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
+	<servlet>
+		<description>dispatcher</description>
+		<display-name>DispatcherServlet</display-name>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-class>com.example.server.DispatcherServlet</servlet-class>
+
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>/DispatcherServlet</url-pattern>
+		<url-pattern>/checkSession</url-pattern>
+	</servlet-mapping>
+
 
 
 	<servlet>
