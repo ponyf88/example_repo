@@ -30,25 +30,28 @@ public class ReceiveWallDataServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 3267140978020582542L;
 
+	//creo un post dell'utente
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) 
 			throws IOException {
-
+		
+		
+		//Recupero l'utente
+		String postingUser = req.getAttribute("user").toString();
+		
 		ServerUtility srvUtil = new ServerUtility();
 
 		String requestText = srvUtil.getRequestText(req);
-
+		
 		JSONArray receivedArray;
 		try {
 			receivedArray = new JSONArray(requestText);
 
+			
 			JSONObject o1 = (JSONObject) receivedArray.get(0);
-			String postingUser = (String) o1.get("postingUser");
+			int postType = (int) o1.get("postType");
 
 			JSONObject o2 = (JSONObject) receivedArray.get(1);
-			int postType = (int) o2.get("postType");
-
-			JSONObject o3 = (JSONObject) receivedArray.get(2);
-			String postContent = (String) o3.get("postContent");
+			String postContent = (String) o2.get("postContent");
 
 			saveWallPost(postingUser,postType,postContent);
 
@@ -112,18 +115,17 @@ public class ReceiveWallDataServlet extends HttpServlet {
 	}
 
 
-
+	//Estraggo ultimi 10 post
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) 
 			throws IOException {
 
 		UserProfileData newUser = null;
 		JSONArray userLastPosts = null;
 		final int MAX_POST = 10;
-		//your image servlet code here
-		if(req.getParameter("user")!=null){
+		String username = req.getAttribute("user").toString();
+		
+		if(username != null){
 
-			//Gestire Risultati multipli
-			String username = req.getParameter("user").toString();
 			System.out.println("Estraggo ultimi 10 post di: " + username);
 			newUser = MemoryManager.getUser(username);
 			userLastPosts = new JSONArray();
@@ -174,9 +176,10 @@ public class ReceiveWallDataServlet extends HttpServlet {
 		}
 	}
 
+	//Crea un post formato JSON
 	private JSONArray createJSONPost(UserWallData prevPost, UserProfileData userData) {
 		JSONArray post = null;
-
+		
 		try {
 			ServerUtility su = new ServerUtility(); 
 			String userFormattedName = su.formatName(userData);

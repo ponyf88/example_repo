@@ -7,20 +7,28 @@ import com.google.code.twig.annotation.Id;
 public class UserSession implements Serializable{
 
 	
-	public UserSession() {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7855034593369120889L;
+
+
+	public UserSession(String user, String jSessId) {
 		
+		this.username = user;
+		this.sessionID = jSessId;
 	}
 
 	/**
 	 * @uml.property  name="username"
 	 */
-	@Id private String username;
+	private String username;
 	
 	/**
 	 * @uml.property  name="sessionId"
 	 */
 	
-	private String sessionID;
+	@Id private String sessionID;
 
 	
 	public String getUsername() {

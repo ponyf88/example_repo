@@ -470,7 +470,7 @@ public class Faithbook implements EntryPoint {
 
 			//car.setStyleName("btn-success");
 			//Recupero dati dei post
-			recoverWallDataRequest("GET","/ReceiveWallDataServlet?user=" + Cookies.getCookie("userCookie"));
+			recoverWallDataRequest("GET","/checkSession?action=wall");
 
 			//Inserimento dati --> SPOSTARE QUESTO CONTROLLO LATO SERVER PASSANDO VISITED USER E JSESSIONID (da cui latyo server verrà ricavato lo userId) DI CUI VERIFICARE L'UGUAGLIANZA,  
 			//ALTRIMENTI UN UTENTE AUTENTICATO PUò AGGIUNGERE AMICI A TUTTI CON LA REQUEST HTTP GIUSTA
@@ -629,8 +629,7 @@ public class Faithbook implements EntryPoint {
 
 				JSONArray postData = new JSONArray();
 
-				JSONObject postingUser = new JSONObject();
-				postingUser.put("postingUser", new JSONString(Cookies.getCookie("userCookie")));
+				
 
 				JSONObject postType = new JSONObject();
 				postType.put("postType", new JSONNumber(widget.getSelectedIndex()));
@@ -638,12 +637,11 @@ public class Faithbook implements EntryPoint {
 				JSONObject postContent = new JSONObject();
 				postContent.put("postContent", new JSONString(postTextArea.getValue()));
 
-				postData.set(0, postingUser);
-				postData.set(1, postType);
-				postData.set(2, postContent);
+				postData.set(0, postType);
+				postData.set(1, postContent);
 
 				//Richiedo i dati del profilo da visitare
-				doAPost("/ReceiveWallDataServlet", postData.toString());	
+				doAPost("/checkSession?action=wall", postData.toString());	
 			}
 
 			@Override
@@ -666,7 +664,7 @@ public class Faithbook implements EntryPoint {
 			flexTable = new FlexTable();
 			flexTable.setStyleName("flexTableCentered");
 
-			getFriendsRESTRequest("GET","/HandleFriendsServlet?getFriendsOf=" + visitedUser);
+			getFriendsRESTRequest("GET","/checkSession?action=friends&getFriendsOf=" + visitedUser);
 
 		}
 
@@ -775,7 +773,7 @@ public class Faithbook implements EntryPoint {
 			//Visito un profilo, se non è il mio
 			//if(!Cookies.getCookie("userCookie").equals(button.getTitle()))	
 			//Richiedo i dati del profilo da visitare
-			addFriendRESTRequest("GET","/HandleFriendsServlet?user=" + Cookies.getCookie("userCookie") + "&addedFriend=" + visitedUser);	
+			addFriendRESTRequest("GET","/checkSession?action=friends&addedFriend=" + visitedUser);	
 		}
 
 		/**
@@ -854,7 +852,7 @@ public class Faithbook implements EntryPoint {
 		public void onClick(ClickEvent event) {
 			if(suggestBox.getText().length() > 0){
 				flexTable.removeAllRows();
-				searchFriendRESTRequest("GET","/SearchFriendServlet?searchData=" + suggestBox.getText());
+				searchFriendRESTRequest("GET","/checkSession?action=search&searchData=" + suggestBox.getText());
 			}
 		}
 
@@ -886,7 +884,7 @@ public class Faithbook implements EntryPoint {
 
 									Image contactImage = new Image();
 									contactImage.setSize("45px", "45px");
-									contactImage.setUrl("/checkSession?action=image&imageType=profile&user=" + ((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
+									contactImage.setUrl("/checkSession?action=image&imageType=profile&photoUser=" + ((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
 
 									contactImage.setTitle(((JSONObject) friendDataJSONArray.get(0)).get("user").isString().stringValue());
 									//contactImage.addClickHandler(new VisitProfileHandler());

@@ -3,6 +3,7 @@ package com.example.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +15,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
+
 import com.example.shared.*;
-
-
 import com.example.data.MemoryManager;
 import com.example.data.UserProfileData;
+import com.example.data.UserSession;
 import com.google.appengine.api.datastore.Blob;
 
 public class SubscribeServlet extends HttpServlet {
@@ -26,34 +27,32 @@ public class SubscribeServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 3158938630983769801L;
-
+	final int TWO_WEEKS = 14*24*60*60; //due settimane
+	
 	public SubscribeServlet() {
 	}
 
-
+	//Login tramite passaggio user e pw
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		String sentUser = req.getParameter("user");
 		String sentPw = req.getParameter("pw"); 
 		
-		final int TWO_WEEKS = 14*24*60*60; //due settimane
+	
 		
 		//resp.getWriter().println("Sei loggato!");
 
 		//Ricerco dati user
 		UserProfileData newUser = MemoryManager.getUser(sentUser);
 		if (newUser == null || (!newUser.getPassword().equals(sentPw) ) )
-			resp.getWriter().println("Errore di autenticazione");
+			resp.getWriter().println("Errore di autenticazione: user o password errati");
 		else{
-			//Setto il cookie
-			String sessionId = req.getSession().getId();
-			Cookie userCookie = new Cookie("JSESSIONID",sessionId);
-			//System.out.println("Setto il cookie di login per:" + newUser.getUsername());
 			
 			//TODO: salvare in memoria l'oggetto sessione con user e jsessionid associato
-			
-			//Durata: 1 giorno
-			userCookie.setMaxAge(TWO_WEEKS);
+			//Setto il cookie
+			String sessionId = req.getSession().getId();
+			Cookie userCookie = createSessionCookie(sentUser,
+					sessionId);
 			resp.addCookie(userCookie);
 
 			JSONArray userData = new JSONArray();
@@ -95,6 +94,21 @@ public class SubscribeServlet extends HttpServlet {
 		}
 	}
 
+	//Crea il cookie di sessione da reinviare al client: refactor
+	private Cookie createSessionCookie(String sentUser,
+			String sessionId) {
+		Cookie userCookie = new Cookie("JSESSIONID",sessionId);
+		//System.out.println("Setto il cookie di login per:" + newUser.getUsername());
+		
+		UserSession newUserSession = new UserSession(sentUser, sessionId);
+		
+		MemoryManager.createUserSession(newUserSession);
+		//Durata: 1 giorno
+		userCookie.setMaxAge(TWO_WEEKS);
+		return userCookie;
+	}
+
+	//Subscription tramite POST
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		System.out.println("Ricevuta richiesta da: " + req.getRequestURI());
@@ -109,7 +123,6 @@ public class SubscribeServlet extends HttpServlet {
 
 		Blob imageBlob = null;
 		try {
-
 
 			String birthDate = "";
 			ByteArrayOutputStream photoBuffer = null;
@@ -218,16 +231,14 @@ public class SubscribeServlet extends HttpServlet {
 		if(newUser == null){
 			//System.out.println("Email mia:" + MemoryManager.getUser("ponyf88").getEmail());
 			//System.out.println("foto mia (dim):" + MemoryManager.getUser("ponyf88").getProfilePhoto().getBytes().length);
-			resp.getWriter().println("User già presente, inserirne uno diverso!");
+			resp.getWriter().println("Username già presente, inserirne uno differente!");
 
 		}
 		else{
 			//Invio cookie logged in e dati dello user
-			Cookie userCookie = new Cookie("userCookie",newUser.getUsername());
-			//Durata: 1 giorno
-			userCookie.setMaxAge(24*60*60);
+			Cookie userCookie = createSessionCookie(newUser.getUsername(), req.getSession().getId());
 			resp.addCookie(userCookie);
-			resp.getWriter().println("Cookie di logging aggiunto");
+			resp.getWriter().println("Cookie di sessione aggiunto");
 
 			JSONArray userData = new JSONArray();
 

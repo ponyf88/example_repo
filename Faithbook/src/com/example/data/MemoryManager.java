@@ -154,7 +154,7 @@ public class MemoryManager {
 	} 
 
 	//Estraggo lo user associato al sessionID dato in input --> usare in dispatcher x verifica
-	public static synchronized String VerifySession(String sessionID) {
+	public static synchronized String verifySession(String sessionID) {
 
 		String associatedUser = null;
 		
@@ -207,13 +207,13 @@ public class MemoryManager {
 		if (aUserFound != null) {
 			try {
 				datastore.associate(newUser);
-				System.err.println("user datastore associate"+newUser);
+				System.out.println("user datastore associate"+newUser);
 			} catch(IllegalArgumentException e) {
 
 				System.err.println("user associate failed");
 			} finally {
 				datastore.update(newUser);
-				System.err.println("user datastore update"+newUser);
+				System.out.println("user datastore update"+newUser);
 			}
 		}
 		else{

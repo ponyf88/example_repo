@@ -22,11 +22,12 @@ public class HandleFriendsServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 3267140978020582542L;
 
+	//
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) 
 			throws IOException {
 
 		System.out.println("Dentro HandleFriends");
-		if(req.getParameter("user") != null){
+		if(req.getAttribute("user") != null){
 			if(req.getParameter("addedFriend") != null){
 				String user = req.getParameter("user").toString();
 				System.out.println(user + " aggiunge agli amici " + req.getParameter("addedFriend").toString());
@@ -44,6 +45,7 @@ public class HandleFriendsServlet extends HttpServlet {
 				}
 			}
 		}
+		//Vado a reperire gli amici di un utente visitato
 		else if(req.getParameter("getFriendsOf") != null){
 			String user = req.getParameter("getFriendsOf");
 			System.out.println("Ricerco gli amici di: " + user);

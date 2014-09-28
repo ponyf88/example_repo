@@ -29,9 +29,9 @@ public class ImageServlet extends HttpServlet {
 		byte[] imageProfileData = null;
 		//your image servlet code here
 		if(req.getParameter("imageType").equals("profile")){
-			if(req.getParameter("user") != null){
-				String user = req.getParameter("user").toString();
-				System.out.println(user);
+			if(req.getParameter("photoUser") != null){
+				String user = req.getParameter("photoUser").toString();
+				//System.out.println(user);
 				UserProfileData userProfileData = MemoryManager.getUser(user);
 				imageProfileData = userProfileData.getProfilePhoto().getBytes();
 			}
@@ -41,13 +41,14 @@ public class ImageServlet extends HttpServlet {
 		resp.setContentType("image/jpeg");
 
 		//prova lettura di feed RSS 
+		/*
 	    RSSFeedParser parser = new RSSFeedParser("http://goofynomics.blogspot.it/feeds/posts/default?alt=rss");
 	    Feed feed = parser.readFeed();
 	    System.out.println(feed);
 	    for (FeedMessage message : feed.getMessages()) {
 	      System.out.println(message);
 	      
-	    }
+	    }*/
 		
 		
 		
